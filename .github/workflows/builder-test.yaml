@@ -26,5 +26,5 @@ jobs:
           name: SLSA_BINARY
       - run: |
           ls -l SLSA_BINARY
-          chmd a+x SLSA_BINARY
+          chmod a+x SLSA_BINARY
           ./SLSA_BINARY
