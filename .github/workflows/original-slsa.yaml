@@ -13,7 +13,6 @@ jobs:
   #   name: verify scorecard
   #   runs-on: ubuntu-latest
   build:
-    name: SLSA Golang builder
     runs-on: ubuntu-latest
     steps:
       - uses: laurentsimon/slsa-on-github/builder-golang@feat/actionfetch
