@@ -25,5 +25,6 @@ jobs:
         with:
           name: SLSA_BINARY
       - run: |
-          ls -a SLSA_BINARY
+          ls -l SLSA_BINARY
+          chmd a+x SLSA_BINARY
           ./SLSA_BINARY
