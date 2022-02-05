@@ -5,7 +5,6 @@ on: workflow_dispatch
 permissions: read-all
 
 env:
-  BUILDER_OUTPUT_BINARY: main-out
   BUILDER_GO_VERSION: 1.18
 
 jobs:
@@ -15,7 +14,6 @@ jobs:
     steps:
       - uses: laurentsimon/slsa-on-github/builder-golang@feat/actionfetch
         with:
-          binary: $BUILDER_OUTPUT_BINARY
           go-version: $BUILDER_GO_VERSION
   
   test:
