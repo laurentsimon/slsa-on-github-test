@@ -10,7 +10,7 @@ jobs:
       - run: echo "TODO generate arguments"
 
   slsa-build:
-    needs: args
+    #needs: args
     uses: laurentsimon/slsa-on-github/.github/workflows/slsa-builder-go.yaml@feat/reusable
     with:
       go-version: 1.17
