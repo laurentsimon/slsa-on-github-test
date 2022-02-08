@@ -10,6 +10,7 @@ jobs:
       - run: echo "TODO generate arguments"
       
   build:
+    needs: args
     uses: laurentsimon/slsa-on-github/.github/workflows/test-reusable-go.yml@feat/reusable
     with:
       go-version: 1.17
