@@ -4,15 +4,20 @@ on:
   workflow_dispatch:
 
 jobs:
-  job1:
+  args:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "TODO generate arguments"
+      
+  build:
     uses: laurentsimon/slsa-on-github/.github/workflows/test-reusable-go.yml@feat/reusable
     with:
       go-version: 1.17
 
-  job2:
+  upload:
     runs-on: ubuntu-latest
-    needs: job1
+    needs: build
     steps:
       - run: |
-          echo name is ${{ needs.job1.outputs.go-binary-name }}
-          ./${{ needs.job1.outputs.go-binary-name }}
+          echo name is ${{ needs.build.outputs.go-binary-name }}
+          echo ./${{ needs.job1.outputs.go-binary-name }}
