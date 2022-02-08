@@ -5,7 +5,7 @@ on:
 
 jobs:
   job1:
-    uses: laurentsimon/slsa-on-github/.github/workflows/slsa-builder-go.yml@feat/reusable
+    uses: laurentsimon/slsa-on-github/.github/workflows/test-reusable.yml@feat/reusable
 
   job2:
     runs-on: ubuntu-latest
