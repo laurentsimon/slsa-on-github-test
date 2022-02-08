@@ -9,15 +9,21 @@ jobs:
     steps:
       - run: echo "TODO generate arguments"
 
-  slsa-build:
+  job1:
     needs: args
-    uses: laurentsimon/slsa-on-github/.github/workflows/slsa-builder-go.yml@feat/reusable
+    uses: laurentsimon/slsa-on-github/.github/workflows/test-reusable-go.yml@feat/reusable
+    with:
+      go-version: 1.17
+
+#   slsa-build:
+#     needs: args
+#     uses: laurentsimon/slsa-on-github/.github/workflows/slsa-builder-go.yml@feat/reusable
 #     with:
 #       go-version: 1.17
       #working-dir: 
  
-  upload:
-    runs-on: ubuntu-latest
-    needs: slsa-build
-    steps:
-      - run: echo "the artifact name is ${{ needs.slsa-build.outputs.go-binary-name }}"
+#   upload:
+#     runs-on: ubuntu-latest
+#     needs: slsa-build
+#     steps:
+#       - run: echo "the artifact name is ${{ needs.slsa-build.outputs.go-binary-name }}"
