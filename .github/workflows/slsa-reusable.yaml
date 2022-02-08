@@ -7,10 +7,9 @@ jobs:
   args:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "TODO: generate arguments"
-      
+      - run: echo "TODO generate arguments"
+
   slsa-build:
-    runs-on: ubuntu-latest
     needs: args
     uses: laurentsimon/slsa-on-github/.github/workflows/slsa-builder-go.yaml@feat/reusable
     with:
