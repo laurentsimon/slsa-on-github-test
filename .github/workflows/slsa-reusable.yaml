@@ -1,5 +1,4 @@
-name: Call a reusable workflow and use its outputs
-
+name: SLSA go building workflow
 on:
   workflow_dispatch:
 
