@@ -6,6 +6,8 @@ on:
 jobs:
   job1:
     uses: laurentsimon/slsa-on-github/.github/workflows/test-reusable-go.yml@feat/reusable
+    with:
+      go-version: 1.17
 
   job2:
     runs-on: ubuntu-latest
