@@ -11,7 +11,7 @@ jobs:
 
   slsa-build:
     #needs: args
-    uses: laurentsimon/slsa-on-github/.github/workflows/slsa-builder-go.yml@feat/reusable
+    uses: laurentsimon/slsa-on-github/.github/workflows/test-reusable.yml@feat/reusable
     with:
       go-version: 1.17
       #working-dir: 
