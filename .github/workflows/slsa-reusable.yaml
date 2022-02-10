@@ -19,7 +19,7 @@ jobs:
       #packages: write
       contents: read
     needs: args
-    uses: laurentsimon/slsa-on-github/.github/workflows/slsa-builder-go.yml@feat/reusable
+    uses: laurentsimon/slsa-on-github/.github/workflows/slsa-builder-go.yml@feat/args
     with:
       go-version: 1.17
       goos: linux
