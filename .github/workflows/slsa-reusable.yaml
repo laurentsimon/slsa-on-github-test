@@ -12,9 +12,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "::set-output name=envs::"[ENV_TEST=\"some tests env variable\", ENV_TEST2=\"another one\", GO111MODULE=on, CGO_ENABLED=0]\""
-          echo "::set-output name=ldflags::"-X github.com/ossf/scorecard/v4/pkg.gitVersion=v3.2.1-208-g8d67482\""
-      
+          #echo "::set-output name=envs::[ENV_TEST="some tests env variable", ENV_TEST2="another one", GO111MODULE=on, CGO_ENABLED=0]"
+          echo "::set-output name=ldflags::-X github.com/ossf/scorecard/v4/pkg.gitVersion=v3.2.1-208-g8d67482"
+          echo "::set-output name=version_flags::$(./scripts/version-ldflags)"
+  
+  test:
+    runs-on: ubuntu-latest
+    needs: args
+    steps:
+      - run: |
+          echo "ldflags=${{ needs.args.outputs.ldflags }}"
+          echo "version_flags=${{ needs.args.outputs.version_flags }}"
   build:
     permissions:
       id-token: write
