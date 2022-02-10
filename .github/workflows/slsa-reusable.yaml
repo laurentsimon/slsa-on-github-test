@@ -11,7 +11,9 @@ jobs:
   args:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "TODO generate arguments"
+      - run: |
+          echo "::set-output name=envs::[ENV_TEST=\"some tests env variable\", ENV_TEST2=\"another one\", GO111MODULE=on, CGO_ENABLED=0]"
+          echo "::set-output name=ldflags::-X github.com/ossf/scorecard/v4/pkg.gitVersion=v3.2.1-208-g8d67482"
       
   build:
     permissions:
@@ -24,8 +26,8 @@ jobs:
       go-version: 1.17
       goos: linux
       goarch: amd64
-      envs: ENV_TEST="some tests env variable", ENV_TEST2="another one", GO111MODULE=on, CGO_ENABLED=0
-      #ldflags: 
+      envs: ${{ needs.args.outputs.envs }}
+      ldflags: ${{ needs.args.outputs.ldflags }}
 
   upload:
     permissions:
