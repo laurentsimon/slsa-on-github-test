@@ -24,7 +24,7 @@ jobs:
       go-version: 1.17
       goos: linux
       goarch: amd64
-      envs: ENV_TEST="some tests env variable", ENV_TEST2="another one"
+      envs: ENV_TEST="some tests env variable", ENV_TEST2="another one", GO111MODULE=on, CGO_ENABLED=0
       #ldflags: 
 
   upload:
