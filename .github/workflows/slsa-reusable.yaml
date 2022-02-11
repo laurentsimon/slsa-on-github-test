@@ -18,16 +18,17 @@ jobs:
           echo "::set-output name=value::-X github.com/ossf/scorecard/v4/pkg.gitVersion=v3.2.1-208-g8d67482"
 
   build:
-    env:
-      VERSION_LDFLAGS: ${{needs.args.outputs.ldflags}}
+#     env:
+#       VERSION_LDFLAGS: ${{needs.args.outputs.ldflags}}
     permissions:
       id-token: write
       #packages: write
       contents: read
-    runs-on: ubuntu-latest
     needs: args
-    steps:
-      - uses: laurentsimon/slsa-on-github/.github/workflows/slsa-builder-go.yml@feat/args
+    uses: laurentsimon/slsa-on-github/.github/workflows/slsa-builder-go.yml@feat/args
+    with:
+      #TODO: make this a json/yaml object object
+      env: "VERSION_LDFLAGS:${{needs.args.outputs.ldflags}}"
 
   upload:
     permissions:
