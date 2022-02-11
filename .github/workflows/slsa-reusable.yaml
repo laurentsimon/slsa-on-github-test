@@ -27,6 +27,7 @@ jobs:
     needs: args
     uses: laurentsimon/slsa-on-github/.github/workflows/slsa-builder-go.yml@feat/args2
     with:
+      go-version: 1.17
       #TODO: make this a json/yaml object object
       env: "VERSION_LDFLAGS:${{needs.args.outputs.ldflags}}"
 
