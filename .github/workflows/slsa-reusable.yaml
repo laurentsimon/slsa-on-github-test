@@ -15,7 +15,7 @@ jobs:
     steps:
       - id: ldflags
         run: |
-          echo "::set-output name=value::-X github.com/ossf/scorecard/v4/pkg.gitVersion=v3.2.1-208-g8d67482"
+          echo "::set-output name=value::-X main.gitVersion=v1.2.3 -X main.gitSomething=somthg"
 
   build:
 #     env:
