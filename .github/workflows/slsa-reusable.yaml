@@ -25,7 +25,7 @@ jobs:
       #packages: write
       contents: read
     needs: args
-    uses: laurentsimon/slsa-on-github/.github/workflows/slsa-builder-go.yml@feat/argfilter
+    uses: laurentsimon/slsa-on-github/.github/workflows/slsa-builder-go.yml@feat/buildname
     with:
       go-version: 1.17
       #TODO: make this a json/yaml object object
