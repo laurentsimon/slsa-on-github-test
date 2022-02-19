@@ -16,6 +16,15 @@ jobs:
       - id: ldflags
         run: |
           echo "::set-output name=value::-X main.gitVersion=v1.2.3 -X main.gitSomething=somthg"
+      - id: file
+        run: echo some file > provenance
+      - name: Upload the artifact
+        uses: actions/upload-artifact@82c141cc518b40d92cc801eee768e7aafc9c2fa2 # v2.3.1
+        with:
+          name: provenance
+          path: provenance
+          if-no-files-found: error
+          retention-days: 5
 
   build:
 #     env:
