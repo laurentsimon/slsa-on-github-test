@@ -43,5 +43,7 @@ jobs:
           name: ${{ needs.build.outputs.go-binary-name }}
       - run: |
           echo name is ${{ needs.build.outputs.go-binary-name }}
+          pwd
+          ls
           chmod a+x ./${{ needs.build.outputs.go-binary-name }}
           ./${{ needs.build.outputs.go-binary-name }}
