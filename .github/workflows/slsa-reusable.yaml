@@ -18,6 +18,10 @@ jobs:
           echo "::set-output name=value::-X main.gitVersion=v1.2.3 -X main.gitSomething=somthg"
 
   build:
+    container:
+      image: node:14.16
+      env:
+        NODE_ENV: development
     permissions:
       id-token: write
       #packages: write
@@ -28,10 +32,6 @@ jobs:
       go-version: 1.17
       #TODO: make this a json/yaml object object
       env: "VERSION_LDFLAGS:${{needs.args.outputs.ldflags}}"
-    steps:
-      - uses: 'actions/download-artifact@v2'
-        with:
-          name: ${{ needs.build.outputs.go-binary-name }}
 
   upload:
     permissions:
