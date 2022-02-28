@@ -1,6 +1,7 @@
 name: Test SLSA
 on:
   workflow_dispatch:
+  workflow_call:
 
 permissions: read-all
 
@@ -18,7 +19,6 @@ jobs:
           echo "::set-output name=value::-X main.gitVersion=v1.2.3 -X main.gitSomething=somthg"
 
   build:
-    environment: bla
     permissions:
       id-token: write
       #packages: write
