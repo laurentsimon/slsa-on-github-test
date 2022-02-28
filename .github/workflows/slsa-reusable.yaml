@@ -18,12 +18,7 @@ jobs:
           echo "::set-output name=value::-X main.gitVersion=v1.2.3 -X main.gitSomething=somthg"
 
   build:
-    services:
-      nginx:
-        image: nginx
-        # Map port 8080 on the Docker host to port 80 on the nginx container
-        ports:
-          - 8080:80
+    environment: bla
     permissions:
       id-token: write
       #packages: write
