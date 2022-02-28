@@ -5,6 +5,11 @@ on:
 
 permissions: read-all
 
+defaults:
+  run:
+    shell: sh
+    working-directory: scripts
+    
 # env:
 #   ENV_TEST: "some tests env variable"
       
