@@ -1,0 +1,18 @@
+name: Test SLSA
+on:
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  build:
+    permissions:
+      id-token: write
+      #packages: write
+      contents: read
+    needs: args
+    uses: laurentsimon/slsa-on-github-test/.github/workflows/slsa-reusable.yaml@main
+    with:
+      go-version: 1.17
+      #TODO: make this a json/yaml object object
+      env: "VERSION_LDFLAGS:${{needs.args.outputs.ldflags}}"
