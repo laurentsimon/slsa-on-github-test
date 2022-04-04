@@ -33,7 +33,7 @@ jobs:
           pwd
           ls
           chmod a+x ./${{ needs.build.outputs.go-binary-name }}
-          ./${{ needs.build.outputs.go-binary-name }} --help
+          ./${{ needs.build.outputs.go-binary-name }}
       - name: Release
         uses: softprops/action-gh-release@1e07f4398721186383de40550babbdf2b84acfc5
         if: startsWith(github.ref, 'refs/tags/')
