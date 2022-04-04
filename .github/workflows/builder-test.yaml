@@ -1,6 +1,10 @@
 name: SLSA Release
 
-on: workflow_dispatch
+on: 
+  workflow_dispatch:
+  push:
+    tags:
+      - "*" 
 
 permissions: read-all
 
