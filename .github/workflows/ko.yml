@@ -33,5 +33,5 @@ jobs:
           ko login ghcr.io -u laurentsimon -p "$TOKEN"
       
       - name: Build and publish
-      - run: |
+        run: |
           ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
