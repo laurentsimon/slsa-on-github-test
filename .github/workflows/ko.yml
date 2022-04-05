@@ -16,9 +16,15 @@ jobs:
       TAGS: tagtest1,tagtest2
       # Note: "." works to in this simple case
       PROJECT: laurentsimon/helloworld
+      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      USERNAME: laurentsimon
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        
+      - name: Login
+        run: |
+          ko login ghcr.io -u laurentsimon -p "$TOKEN"
        # Note: downlaoading and pinning the download seems better
        # than adding this dependency. Need to look how the install works
        # remko/dsadmin/blob/7a6939179bc56b1be28cada040f2b4a148e3e14a/.github/workflows/publish-release.yml
