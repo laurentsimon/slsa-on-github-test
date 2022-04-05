@@ -35,7 +35,11 @@ jobs:
 #       - name: Login ghcr
 #         run: |
 #           ko login ghcr.io -u laurentsimon -p "$GIHUB_TOKEN"
-          
+      
+      - name: Cleanup auth
+        run: |
+          rm -f /home/runner/.docker/config.json
+
       - name: Login docker
         run: |
           ko login hub.docker.com -u laurentsimon -p "$TOKEN"
