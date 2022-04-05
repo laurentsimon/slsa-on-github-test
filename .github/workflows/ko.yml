@@ -2,6 +2,13 @@ name: Ko Release
 
 on: 
   workflow_dispatch:
+    inputs:
+      registry:
+        type: choice
+        description: Registry
+        options: 
+        - docker.io
+        - ghcr.io
   push:
     tags:
       - "*" 
@@ -9,7 +16,7 @@ on:
 permissions: read-all
 
 jobs:
-  docker_release:
+  release:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -33,13 +40,15 @@ jobs:
         uses: imjasonh/setup-ko@v0.4
     
       - name: docker
+        if: ${{ github.event.inputs.registry == docker.io}}
         run: |
           #TODO: set -e
           ko login docker.io -u laurentsimon -p "$DOCKER_TOKEN"
           KO_DOCKER_REPO="docker.io/laurentsimon" ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
       
-#       - name: Build and publish
-#         run: |
-#           #TODO: set -e
-#           ko login ghcr.io -u laurentsimon -p "$GIHUB_TOKEN"
-#           ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
+      - name: github
+        if: ${{ github.event.inputs.registry == ghcr.io}}
+        run: |
+          #TODO: set -e
+          ko login ghcr.io -u laurentsimon -p "$GIHUB_TOKEN"
+          ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
