@@ -22,15 +22,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         
-      - name: Set up Go
-        uses: actions/setup-go@v2
+       # Note: downlaoading and pinning the download seems better
+       # than adding this dependency. Need to look how the install works
+       # remko/dsadmin/blob/7a6939179bc56b1be28cada040f2b4a148e3e14a/.github/workflows/publish-release.yml
+      - name: Setup Ko
+        uses: imjasonh/setup-ko@v0.4
         
       - name: Login
         run: |
           ko login ghcr.io -u laurentsimon -p "$TOKEN"
-       # Note: downlaoading and pinning the download seems better
-       # than adding this dependency. Need to look how the install works
-       # remko/dsadmin/blob/7a6939179bc56b1be28cada040f2b4a148e3e14a/.github/workflows/publish-release.yml
-      - uses: imjasonh/setup-ko@v0.4
+      
+      - name: Build and publish
       - run: |
           ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
