@@ -19,7 +19,8 @@ jobs:
       TAGS: tagtest1,tagtest2
       # Note: "." works to in this simple case
       PROJECT: laurentsimon/helloworld
-      TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GIHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
       USERNAME: laurentsimon
     steps:
       - name: Checkout
@@ -31,9 +32,13 @@ jobs:
       - name: Setup Ko
         uses: imjasonh/setup-ko@v0.4
         
-      - name: Login
+#       - name: Login ghcr
+#         run: |
+#           ko login ghcr.io -u laurentsimon -p "$GIHUB_TOKEN"
+          
+      - name: Login docker
         run: |
-          ko login ghcr.io -u laurentsimon -p "$TOKEN"
+          ko login hub.docker.com -u laurentsimon -p "$TOKEN"
       
       - name: Build and publish
         run: |
