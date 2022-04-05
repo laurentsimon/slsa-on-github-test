@@ -11,6 +11,9 @@ permissions: read-all
 jobs:
   docker_release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     env:
       PLATFORMS: linux/amd64,linux/arm64,linux/386,linux/arm
       TAGS: tagtest1,tagtest2
