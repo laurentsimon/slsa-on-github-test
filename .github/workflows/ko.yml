@@ -1,0 +1,26 @@
+name: Ko Release
+
+on: 
+  workflow_dispatch:
+  push:
+    tags:
+      - "*" 
+
+permissions: read-all
+
+jobs:
+  docker_release:
+    env:
+      PLATFORMS: linux/amd64,linux/arm64,linux/386,linux/arm
+      TAGS: tagtest1,tagtest2
+      # Note: "." works to in this simple case
+      PROJECT: laurentsimon/helloworld
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+       # Note: downlaoading and pinning the download seems better
+       # than adding this dependency. Need to look how the install works
+       # remko/dsadmin/blob/7a6939179bc56b1be28cada040f2b4a148e3e14a/.github/workflows/publish-release.yml
+      - uses: imjasonh/setup-ko@v0.4
+      - run: |
+        ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
