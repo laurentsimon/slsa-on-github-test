@@ -10,6 +10,7 @@ permissions: read-all
 
 jobs:
   docker_release:
+    runs-on: ubuntu-latest
     env:
       PLATFORMS: linux/amd64,linux/arm64,linux/386,linux/arm
       TAGS: tagtest1,tagtest2
@@ -23,4 +24,4 @@ jobs:
        # remko/dsadmin/blob/7a6939179bc56b1be28cada040f2b4a148e3e14a/.github/workflows/publish-release.yml
       - uses: imjasonh/setup-ko@v0.4
       - run: |
-        ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
+          ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
