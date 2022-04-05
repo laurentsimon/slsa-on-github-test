@@ -31,17 +31,15 @@ jobs:
        # remko/dsadmin/blob/7a6939179bc56b1be28cada040f2b4a148e3e14a/.github/workflows/publish-release.yml
       - name: Setup Ko
         uses: imjasonh/setup-ko@v0.4
-        
-#       - name: Login ghcr
-#         run: |
-#           ko login ghcr.io -u laurentsimon -p "$GIHUB_TOKEN"
-
-      - name: Login docker
+    
+      - name: docker
         run: |
           #TODO: set -e
           ko login hub.docker.com -u laurentsimon -p "$DOCKER_TOKEN"
+          KO_DOCKER_REPO="hub.docker.com/laurentsimon" ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
       
-      - name: Build and publish
-        run: |
-          #TODO: set -e
-          ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
+#       - name: Build and publish
+#         run: |
+#           #TODO: set -e
+#           ko login ghcr.io -u laurentsimon -p "$GIHUB_TOKEN"
+#           ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
