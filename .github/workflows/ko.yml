@@ -35,8 +35,8 @@ jobs:
       - name: docker
         run: |
           #TODO: set -e
-          ko login hub.docker.com -u laurentsimon -p "$DOCKER_TOKEN"
-          KO_DOCKER_REPO="hub.docker.com/laurentsimon" ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
+          ko login docker.io -u laurentsimon -p "$DOCKER_TOKEN"
+          KO_DOCKER_REPO="docker.io/laurentsimon" ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
       
 #       - name: Build and publish
 #         run: |
