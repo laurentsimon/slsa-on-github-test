@@ -38,8 +38,10 @@ jobs:
 
       - name: Login docker
         run: |
+          #TODO: set -e
           ko login hub.docker.com -u laurentsimon -p "$DOCKER_TOKEN"
       
       - name: Build and publish
         run: |
+          #TODO: set -e
           ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
