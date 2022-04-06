@@ -52,11 +52,11 @@ jobs:
         run: |
           set -euo pipefail
           
-          ko login docker.io -u laurentsimon -p "$DOCKER_TOKEN"
+          ko login "${{ env.DOCKER_REGISTRY }}" -u "$USERNAME" -p "$DOCKER_TOKEN"
           
           # Note: this will be done in Go.
           # Note 2: we will use a dr-run to generate the command.
-          export KO_DOCKER_REPO="docker.io/laurentsimon"
+          export KO_DOCKER_REPO="$PROJECT"
           DOCKER_IMAGE=$(ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT")
           echo "::set-output name=docker-image::$DOCKER_IMAGE"
       
@@ -65,7 +65,8 @@ jobs:
         run: |
           set -euo pipefail
           
-          ko login ghcr.io -u laurentsimon -p "$GIHUB_TOKEN"
+          ko login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" -p "$GIHUB_TOKEN"
+          
           GITHUB_IMAGE=$(ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT")
           echo "::set-output name=github-image::$GITHUB_IMAGE"
   
