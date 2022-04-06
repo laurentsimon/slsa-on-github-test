@@ -102,10 +102,10 @@ jobs:
           
           CONTAINER_IMAGE=""
   
-          if [ -n "$UNTRUSTED_DOCKER_IMAGE" ]; then
+          if [[ ! -z "$UNTRUSTED_DOCKER_IMAGE" ]]; then
             echo "docker-image: $UNTRUSTED_DOCKER_IMAGE"
             CONTAINER_IMAGE="$UNTRUSTED_DOCKER_IMAGE"
-          elif [ -n "$UNTRUSTED_GITHUB_IMAGE" ]; then
+          elif [[ ! -z "$UNTRUSTED_GITHUB_IMAGE" ]]; then
             echo "github-image: $UNTRUSTED_GITHUB_IMAGE"
             CONTAINER_IMAGE="$UNTRUSTED_GITHUB_IMAGE"
           else
