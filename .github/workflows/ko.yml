@@ -27,12 +27,12 @@ jobs:
       packages: write
     env:
       PLATFORMS: "linux/amd64,linux/arm64,linux/386,linux/arm"
-      TAGS: "tag1,tag2,tag3"
+      TAGS: tag1,tag2,tag3
       # Note: "." works to in this simple case
-      PROJECT: "laurentsimon/helloworld"
+      PROJECT: laurentsimon/helloworld
       GIHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
       DOCKER_TOKEN: "${{ secrets.DOCKER_TOKEN }}"
-      USERNAME: "laurentsimon"
+      USERNAME: laurentsimon
     outputs:
       docker-image: ${{ steps.docker.outputs.docker-image }}
       github-image: ${{ steps.docker.outputs.github-image }}
