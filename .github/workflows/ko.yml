@@ -30,8 +30,8 @@ jobs:
       TAGS: tag1,tag2,tag3
       # Note: "." works to in this simple case
       PROJECT: laurentsimon/helloworld
-      GIHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-      DOCKER_TOKEN: "${{ secrets.DOCKER_TOKEN }}"
+      GIHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
       USERNAME: laurentsimon
     outputs:
       docker-image: ${{ steps.docker.outputs.docker-image }}
@@ -52,7 +52,8 @@ jobs:
         run: |
           set -euo pipefail
           
-          ko login "${{ env.DOCKER_REGISTRY }}" -u "$USERNAME" -p "$DOCKER_TOKEN"
+          # WARNING: this is for testing: we need escaping
+          ko login ${{ env.DOCKER_REGISTRY }} -u $USERNAME -p "$DOCKER_TOKEN"
           
           # Note: this will be done in Go.
           # Note 2: we will use a dr-run to generate the command.
@@ -66,7 +67,8 @@ jobs:
         run: |
           set -euo pipefail
           
-          ko login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" -p "$GIHUB_TOKEN"
+          # WARNING: this is for testing: we need escaping
+          ko login ${{ env.GITHUB_REGISTRY }} -u $USERNAME -p "$GIHUB_TOKEN"
           
           GITHUB_IMAGE=$(ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT")
           
