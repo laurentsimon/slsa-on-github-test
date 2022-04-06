@@ -50,7 +50,8 @@ jobs:
         id: docker
         if: ${{ github.event.inputs.registry == env.DOCKER_REGISTRY}}
         run: |
-          #TODO: set -e
+          set -euo pipefail
+          
           ko login docker.io -u laurentsimon -p "$DOCKER_TOKEN"
           
           # Note: this will be done in Go.
@@ -62,7 +63,8 @@ jobs:
       - name: github
         if: ${{ github.event.inputs.registry == env.GITHUB_REGISTRY}}
         run: |
-          #TODO: set -e
+          set -euo pipefail
+          
           ko login ghcr.io -u laurentsimon -p "$GIHUB_TOKEN"
           GITHUB_IMAGE=$(ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT")
           echo "::set-output name=github-image::$GITHUB_IMAGE"
@@ -83,7 +85,7 @@ jobs:
       - name: Provenance generation
         id: provenance
         run: |
-          # Note: we will do this in Go code.
+          set -euo pipefail
           
           echo "github-image: $UNTRUSTED_GITHUB_IMAGE"
           # Note: let's do that without using docker binary if possible. Can use cosign APIs?
@@ -114,6 +116,7 @@ jobs:
     steps:
       - name: Docker upload
         run: |
+          set -euo pipefail
           echo "uploading: $UNTRUSTED_PROVENANCE_FILENAME"
           #TODO: verify hash
           echo "sha256: $PROVENANCE_SHA256"
