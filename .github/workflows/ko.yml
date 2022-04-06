@@ -52,9 +52,8 @@ jobs:
         run: |
           set -euo pipefail
           
-          # WARNING: this is for testing: we need escaping
-          echo ko login ${{ env.DOCKER_REGISTRY }} -u $USERNAME -p "$DOCKER_TOKEN"
-          ko login ${{ env.DOCKER_REGISTRY }} -u $USERNAME -p "$DOCKER_TOKEN"
+          echo ko login "${{ env.DOCKER_REGISTRY }}" -u "$USERNAME" -p "$DOCKER_TOKEN"
+          ko login "${{ env.DOCKER_REGISTRY }}" -u "$USERNAME" -p "$DOCKER_TOKEN"
           
           # Note: this will be done in Go.
           # Note 2: we will use a dr-run to generate the command.
@@ -69,9 +68,8 @@ jobs:
         run: |
           set -euo pipefail
           
-          # WARNING: this is for testing: we need escaping
-          echo ko login ${{ env.GITHUB_REGISTRY }} -u $USERNAME -p "$GIHUB_TOKEN"
-          ko login ${{ env.GITHUB_REGISTRY }} -u $USERNAME -p "$GIHUB_TOKEN"
+          echo ko login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" -p "$GIHUB_TOKEN"
+          ko login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" -p "$GIHUB_TOKEN"
           
           echo ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
           
@@ -100,6 +98,8 @@ jobs:
           # Note: let's do that without using docker binary if possible. Can use cosign APIs?
           echo "TODO: pull the image and verify its digest"
           
+          CONTAINER_IMAGE=""
+  
           if [ -n "$UNTRUSTED_DOCKER_IMAGE" ]; then
                 echo "docker-image: $UNTRUSTED_DOCKER_IMAGE"
                 CONTAINER_IMAGE="$UNTRUSTED_DOCKER_IMAGE"
