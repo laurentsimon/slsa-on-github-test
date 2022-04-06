@@ -35,7 +35,7 @@ jobs:
       USERNAME: laurentsimon
     outputs:
       docker-image: ${{ steps.docker.outputs.docker-image }}
-      github-image: ${{ steps.docker.outputs.github-image }}
+      github-image: ${{ steps.github.outputs.github-image }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
