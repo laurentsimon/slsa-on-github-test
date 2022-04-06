@@ -64,6 +64,7 @@ jobs:
           echo "::set-output name=docker-image::$DOCKER_IMAGE"
       
       - name: github
+        id: github
         if: ${{ github.event.inputs.registry == env.GITHUB_REGISTRY}}
         run: |
           set -euo pipefail
