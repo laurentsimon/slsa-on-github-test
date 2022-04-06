@@ -59,7 +59,7 @@ jobs:
           # Note: this will be done in Go.
           # Note 2: we will use a dr-run to generate the command.
           export KO_DOCKER_REPO="$PROJECT"
-          echo DOCKER_IMAGE=$(ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT")
+          echo ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
           DOCKER_IMAGE=$(ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT")
           
           echo "::set-output name=docker-image::$DOCKER_IMAGE"
@@ -70,7 +70,10 @@ jobs:
           set -euo pipefail
           
           # WARNING: this is for testing: we need escaping
+          echo ko login ${{ env.GITHUB_REGISTRY }} -u $USERNAME -p "$GIHUB_TOKEN"
           ko login ${{ env.GITHUB_REGISTRY }} -u $USERNAME -p "$GIHUB_TOKEN"
+          
+          echo ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
           
           GITHUB_IMAGE=$(ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT")
           
