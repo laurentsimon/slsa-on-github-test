@@ -15,20 +15,27 @@ on:
 
 permissions: read-all
 
+env:
+  DOCKER_REGISTRY: docker.io
+  GITHUB_REGISTRY: ghcr.io
+
 jobs:
-  release:
+  build-release:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     env:
-      PLATFORMS: linux/amd64,linux/arm64,linux/386,linux/arm
-      TAGS: tag1,tag2,tag3
+      PLATFORMS: "linux/amd64,linux/arm64,linux/386,linux/arm"
+      TAGS: "tag1,tag2,tag3"
       # Note: "." works to in this simple case
-      PROJECT: laurentsimon/helloworld
-      GIHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-      USERNAME: laurentsimon
+      PROJECT: "laurentsimon/helloworld"
+      GIHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      DOCKER_TOKEN: "${{ secrets.DOCKER_TOKEN }}"
+      USERNAME: "laurentsimon"
+    outputs:
+      docker-image: ${{ steps.docker.outputs.docker-image }}
+      github-image: ${{ steps.docker.outputs.github-image }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -40,15 +47,74 @@ jobs:
         uses: imjasonh/setup-ko@v0.4
     
       - name: docker
-        if: ${{ github.event.inputs.registry == 'docker.io'}}
+        id: docker
+        if: ${{ github.event.inputs.registry == env.DOCKER_REGISTRY}}
         run: |
           #TODO: set -e
           ko login docker.io -u laurentsimon -p "$DOCKER_TOKEN"
-          KO_DOCKER_REPO="docker.io/laurentsimon" ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
+          
+          # Note: this will be done in Go.
+          # Note 2: we will use a dr-run to generate the command.
+          export KO_DOCKER_REPO="docker.io/laurentsimon"
+          DOCKER_IMAGE=$(ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT")
+          echo "::set-output name=docker-image::$DOCKER_IMAGE"
       
       - name: github
-        if: ${{ github.event.inputs.registry == 'ghcr.io'}}
+        if: ${{ github.event.inputs.registry == env.GITHUB_REGISTRY}}
         run: |
           #TODO: set -e
           ko login ghcr.io -u laurentsimon -p "$GIHUB_TOKEN"
-          ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
+          GITHUB_IMAGE=$(ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT")
+          echo "::set-output name=github-image::$GITHUB_IMAGE"
+  
+  provenance-generation:
+    runs-on: ubuntu-latest
+    needs: build-release
+    outputs:
+      filename: ${{ steps.provenance.outputs.filename }}
+      sha256: ${{ steps.provenance.outputs.sha256 }}
+    env:
+      UNTRUSTED_DOCKER_IMAGE: "${{ needs.build-release.outputs.docker-image }}"
+      UNTRUSTED_GITHUB_IMAGE: "${{ needs.build-release.outputs.github-image }}"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Provenance generation
+        id: provenance
+        run: |
+          # Note: we will do this in Go code.
+          
+          echo "github-image: $UNTRUSTED_GITHUB_IMAGE"
+          # Note: let's do that without using docker binary if possible. Can use cosign APIs?
+          echo "TODO: pull the image and verify its digest"
+          
+          if [ -n "$UNTRUSTED_DOCKER_IMAGE" ]; then
+                echo "docker-image: $UNTRUSTED_DOCKER_IMAGE"
+                CONTAINER_IMAGE="$UNTRUSTED_DOCKER_IMAGE"
+          elif [ -n "$UNTRUSTED_GITHUB_IMAGE" ]; then
+                echo "github-image: $UNTRUSTED_GITHUB_IMAGE"
+                CONTAINER_IMAGE="$UNTRUSTED_GITHUB_IMAGE"
+          fi
+          
+          if [ -n "$CONTAINER_IMAGE" ]; then
+            echo "no container image found"
+            exit 2
+          fi
+          
+          echo "::set-output name=filename::$CONTAINER_IMAGE.intoto.jsonl"
+          echo "::set-output name=sha256::prov-hash"
+  
+  provenance-upload:
+    runs-on: ubuntu-latest
+    needs: provenance-generation
+    env:
+      UNTRUSTED_PROVENANCE_FILENAME: "${{ needs.provenance-generation.outputs.filename }}"
+      PROVENANCE_SHA256: "${{ needs.provenance-generation.outputs.sha256 }}"
+    steps:
+      - name: Docker upload
+        run: |
+          echo "uploading: $UNTRUSTED_PROVENANCE_FILENAME"
+          #TODO: verify hash
+          echo "sha256: $PROVENANCE_SHA256"
+         
