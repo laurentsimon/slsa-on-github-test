@@ -75,6 +75,8 @@ jobs:
           
           GITHUB_IMAGE=$(ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT")
           
+          echo "github-image is $GITHUB_IMAGE"
+          
           echo "::set-output name=github-image::$GITHUB_IMAGE"
   
   provenance-generation:
@@ -101,17 +103,17 @@ jobs:
           CONTAINER_IMAGE=""
   
           if [ -n "$UNTRUSTED_DOCKER_IMAGE" ]; then
-                echo "docker-image: $UNTRUSTED_DOCKER_IMAGE"
-                CONTAINER_IMAGE="$UNTRUSTED_DOCKER_IMAGE"
+            echo "docker-image: $UNTRUSTED_DOCKER_IMAGE"
+            CONTAINER_IMAGE="$UNTRUSTED_DOCKER_IMAGE"
           elif [ -n "$UNTRUSTED_GITHUB_IMAGE" ]; then
-                echo "github-image: $UNTRUSTED_GITHUB_IMAGE"
-                CONTAINER_IMAGE="$UNTRUSTED_GITHUB_IMAGE"
-          fi
-          
-          if [ -n "$CONTAINER_IMAGE" ]; then
+            echo "github-image: $UNTRUSTED_GITHUB_IMAGE"
+            CONTAINER_IMAGE="$UNTRUSTED_GITHUB_IMAGE"
+          else
             echo "no container image found"
             exit 2
           fi
+          
+          echo "image is: $CONTAINER_IMAGE"
           
           echo "::set-output name=filename::$CONTAINER_IMAGE.intoto.jsonl"
           echo "::set-output name=sha256::prov-hash"
