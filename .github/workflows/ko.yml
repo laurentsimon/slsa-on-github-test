@@ -58,6 +58,7 @@ jobs:
           # Note 2: we will use a dr-run to generate the command.
           export KO_DOCKER_REPO="$PROJECT"
           DOCKER_IMAGE=$(ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT")
+          
           echo "::set-output name=docker-image::$DOCKER_IMAGE"
       
       - name: github
@@ -68,6 +69,7 @@ jobs:
           ko login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" -p "$GIHUB_TOKEN"
           
           GITHUB_IMAGE=$(ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT")
+          
           echo "::set-output name=github-image::$GITHUB_IMAGE"
   
   provenance-generation:
@@ -88,7 +90,6 @@ jobs:
         run: |
           set -euo pipefail
           
-          echo "github-image: $UNTRUSTED_GITHUB_IMAGE"
           # Note: let's do that without using docker binary if possible. Can use cosign APIs?
           echo "TODO: pull the image and verify its digest"
           
