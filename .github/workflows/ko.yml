@@ -32,6 +32,7 @@ jobs:
       GIHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
       USERNAME: laurentsimon
+      PROJECT: laurentsimon/helloworld
     outputs:
       docker-image: ${{ steps.docker.outputs.docker-image }}
       github-image: ${{ steps.github.outputs.github-image }}
