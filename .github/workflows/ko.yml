@@ -84,6 +84,8 @@ jobs:
     needs: build-release
     permissions:
       packages: write
+      contents: read
+      id-token: write
     env:
       UNTRUSTED_DOCKER_IMAGE: "${{ needs.build-release.outputs.docker-image }}"
       UNTRUSTED_GITHUB_IMAGE: "${{ needs.build-release.outputs.github-image }}"
@@ -158,11 +160,25 @@ jobs:
           
           # verify logs
           #echo "$GIHUB_TOKEN" | docker login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" --password-stdin
+          
+          # Option: --oidc-client-secret-file
           ko login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" -p "$GIHUB_TOKEN"
+          
+          ## ============ testing
+          #--oidc-client-secret-file
+          status_code=$(curl -sS -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=slsa-framework/slsa-github-generator-go/builder" -o jwt.json -w '%{http_code}')
+          if [[ $status_code -ge 400 ]]; then
+              error_msg=$(jq -r .message jwt.json 2>/dev/null || echo 'unknown error')
+              echo "Failed to get OIDC token from GitHub, response $status_code: $error_msg"
+              exit 1;
+          fi
+                    
+          ## ======== end testing
           
           export COSIGN_EXPERIMENTAL=1          
           cosign attest --predicate "$PREDICATE_FILE" \
             --type "slsaprovenance" \
+            --oidc-client-secret-file jwt.json \
             "$PROJECT:$UNTRUSTED_DOCKER_IMAGE"
                   
       - name: Docker upload
