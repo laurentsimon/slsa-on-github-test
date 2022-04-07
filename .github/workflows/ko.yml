@@ -157,12 +157,20 @@ jobs:
           
           # verify logs
           #echo "$GIHUB_TOKEN" | docker login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" --password-stdin
-          ko login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" -p "$GIHUB_TOKEN"
+          #ko login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" -p "$GIHUB_TOKEN"
           
+          export COSIGN_EXPERIMENTAL=1
+          #TODO: update name to predicate
+          
+          cosign attest --predicate "$UNTRUSTED_PROVENANCE_FILENAME" \
+            --type "slsaprovenance" \
+            "$UNTRUSTED_DOCKER_IMAGE"
+            
           # TODO: upload our provenance blob
           #TODO: verify hash
           echo "sha256: $PROVENANCE_SHA256"
           
+      
       - name: Docker upload
         if: ${{ github.event.inputs.registry == env.DOCKER_REGISTRY}}
         run: |
@@ -170,7 +178,7 @@ jobs:
           echo "uploading to ${{ github.event.inputs.registry }}: $UNTRUSTED_PROVENANCE_FILENAME"
           
           # verify logs
-          ko login "${{ env.DOCKER_REGISTRY }}" -u "$USERNAME" -p "$DOCKER_TOKEN"
+          #ko login "${{ env.DOCKER_REGISTRY }}" -u "$USERNAME" -p "$DOCKER_TOKEN"
           
           #TODO: download artifact
           echo "provenance for container is BLABLA" > "$UNTRUSTED_PROVENANCE_FILENAME"
@@ -179,6 +187,7 @@ jobs:
           #  -f "$UNTRUSTED_PROVENANCE_FILENAME" \
           #  "$PROJECT:$UNTRUSTED_PROVENANCE_FILENAME"
         
+          # Somehow this seems to work without authentication to Docker. Why?
           export COSIGN_EXPERIMENTAL=1
           #TODO: update name to predicate
           cosign attest --predicate "$UNTRUSTED_PROVENANCE_FILENAME" \
