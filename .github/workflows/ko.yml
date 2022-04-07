@@ -182,8 +182,7 @@ jobs:
         
           # Somehow this seems to work without authentication to Docker. Why?
           export COSIGN_EXPERIMENTAL=1
-          #TODO: update name to predicate
-          echo cosign attest --predicate "$PREDICATE_FILE" \
+          cosign attest --predicate "$PREDICATE_FILE" \
             --type "slsaprovenance" \
             "$UNTRUSTED_DOCKER_IMAGE"
 
