@@ -79,21 +79,25 @@ jobs:
           
           echo "::set-output name=github-image::$GITHUB_IMAGE"
   
-  provenance-generation:
+  provenance:
     runs-on: ubuntu-latest
     needs: build-release
-    outputs:
-      filename: ${{ steps.provenance.outputs.filename }}
-      sha256: ${{ steps.provenance.outputs.sha256 }}
+    permissions:
+      packages: write
     env:
       UNTRUSTED_DOCKER_IMAGE: "${{ needs.build-release.outputs.docker-image }}"
       UNTRUSTED_GITHUB_IMAGE: "${{ needs.build-release.outputs.github-image }}"
+      GIHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+      USERNAME: laurentsimon
+      PROJECT: laurentsimon/helloworld
+      
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         
-      - name: Provenance generation
-        id: provenance
+      - name: Generate predicate
+        id: gen-predicate
         run: |
           set -euo pipefail
           
@@ -113,8 +117,6 @@ jobs:
             exit 2
           fi
           
-          
-          
           echo "image is: $CONTAINER_IMAGE"
           
           echo "TODO: generate provenance dynamically"
@@ -133,23 +135,7 @@ jobs:
           echo -n "$PROVENANCE_DATA" > "$CONTAINER_PROVENANCE"
           
           echo "::set-output name=filename::$CONTAINER_PROVENANCE"
-          echo "::set-output name=sha256::prov-hash"
-  
-  provenance-upload:
-    runs-on: ubuntu-latest
-    needs: [build-release,provenance-generation]
-    permissions:
-      packages: write
-    env:
-      UNTRUSTED_DOCKER_IMAGE: "${{ needs.build-release.outputs.docker-image }}"
-      UNTRUSTED_GITHUB_IMAGE: "${{ needs.build-release.outputs.github-image }}"
-      UNTRUSTED_PROVENANCE_FILENAME: "${{ needs.provenance-generation.outputs.filename }}"
-      PROVENANCE_SHA256: "${{ needs.provenance-generation.outputs.sha256 }}"
-      GIHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-      USERNAME: laurentsimon
-      PROJECT: laurentsimon/helloworld
-    steps:
+          
       # We may be able to have a generic provenance uploader, but for now let's seperate to keep things simple.
       #TODO: can pull a static image and verify provenance
       - uses: sigstore/cosign-installer@d6a3abf1bdea83574e28d40543793018b6035605
@@ -163,6 +149,8 @@ jobs:
 
       # Note: here we need packages permissions
       - name: Github upload
+        env:
+          PREDICATE: ${{ steps.gen-predicate.outputs.filename }}
         if: ${{ github.event.inputs.registry == env.GITHUB_REGISTRY}}
         run: |
           set -euo pipefail
@@ -172,18 +160,11 @@ jobs:
           #echo "$GIHUB_TOKEN" | docker login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" --password-stdin
           ko login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" -p "$GIHUB_TOKEN"
           
-          export COSIGN_EXPERIMENTAL=1
-          #TODO: update name to predicate
-          
-          cosign attest --predicate "$UNTRUSTED_PROVENANCE_FILENAME" \
+          export COSIGN_EXPERIMENTAL=1          
+          cosign attest --predicate "$PREDICATE" \
             --type "slsaprovenance" \
-            "$UNTRUSTED_DOCKER_IMAGE"
-            
-          # TODO: upload our provenance blob
-          #TODO: verify hash
-          echo "sha256: $PROVENANCE_SHA256"
-          
-      
+            "$PROJECT:$UNTRUSTED_DOCKER_IMAGE"
+                  
       - name: Docker upload
         if: ${{ github.event.inputs.registry == env.DOCKER_REGISTRY}}
         run: |
@@ -192,10 +173,7 @@ jobs:
           
           # verify logs
           ko login "${{ env.DOCKER_REGISTRY }}" -u "$USERNAME" -p "$DOCKER_TOKEN"
-          
-          #TODO: download artifact
-          echo "provenance for container is BLABLA" > "$UNTRUSTED_PROVENANCE_FILENAME"
-          
+            
           #cosign upload blob -ct "application/vnd.dsse.envelope.v1+json" \
           #  -f "$UNTRUSTED_PROVENANCE_FILENAME" \
           #  "$PROJECT:$UNTRUSTED_PROVENANCE_FILENAME"
@@ -203,11 +181,9 @@ jobs:
           # Somehow this seems to work without authentication to Docker. Why?
           export COSIGN_EXPERIMENTAL=1
           #TODO: update name to predicate
-          cosign attest --predicate "$UNTRUSTED_PROVENANCE_FILENAME" \
+          echo cosign attest --predicate "$PREDICATE" \
             --type "slsaprovenance" \
             "$UNTRUSTED_DOCKER_IMAGE"
 
-          # TODO: upload our provenance blob
-          #TODO: verify hash
-          echo "sha256: $PROVENANCE_SHA256"
+          
          
