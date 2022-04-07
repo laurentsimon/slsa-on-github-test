@@ -135,7 +135,7 @@ jobs:
       UNTRUSTED_PROVENANCE_FILENAME: "${{ needs.provenance-generation.outputs.filename }}"
       PROVENANCE_SHA256: "${{ needs.provenance-generation.outputs.sha256 }}"
       GIHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      DOCKER_TOKEN: ${{.secrets.DOCKER_TOKEN }}
+      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
       USERNAME: laurentsimon
       PROJECT: laurentsimon/helloworld
     steps:
