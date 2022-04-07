@@ -127,15 +127,29 @@ jobs:
       USERNAME: laurentsimon
     steps:
       # We may be able to have a generic provenance uploader, but for now let's seperate to keep things simple.
-      - name: GitHub upload
+      - name: Github upload
         if: ${{ github.event.inputs.registry == env.GITHUB_REGISTRY}}
         run: |
           set -euo pipefail
-          echo "uploading: $UNTRUSTED_PROVENANCE_FILENAME"
+          echo "uploading to ${{ github.event.inputs.registry }}: $UNTRUSTED_PROVENANCE_FILENAME"
           
           # verify logs
           #echo "$GIHUB_TOKEN" | docker login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" --password-stdin
           ko login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" -p "$GIHUB_TOKEN"
+          
+          # TODO: upload our provenance blob
+          #TODO: verify hash
+          echo "sha256: $PROVENANCE_SHA256"
+          
+      - name: Docker upload
+        if: ${{ github.event.inputs.registry == env.DOCKER_REGISTRY}}
+        run: |
+          set -euo pipefail
+          echo "uploading to ${{ github.event.inputs.registry }}: $UNTRUSTED_PROVENANCE_FILENAME"
+          
+          # verify logs
+          #echo "$GIHUB_TOKEN" | docker login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" --password-stdin
+          ko login "${{ env.DOCKER_REGISTRY }}" -u "$USERNAME" -p "$DOCKER_TOKEN"
           
           # TODO: upload our provenance blob
           #TODO: verify hash
