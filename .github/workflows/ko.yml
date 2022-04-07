@@ -29,7 +29,6 @@ jobs:
       PLATFORMS: "linux/amd64,linux/arm64,linux/386,linux/arm"
       TAGS: tag1,tag2,tag3
       # Note: "." works to in this simple case
-      PROJECT: laurentsimon/helloworld
       GIHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
       USERNAME: laurentsimon
@@ -57,8 +56,7 @@ jobs:
           
           # Note: this will be done in Go.
           # Note 2: we will use a dr-run to generate the command.
-          export KO_DOCKER_REPO="$PROJECT"
-          echo ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
+          export KO_DOCKER_REPO="${{ env.DOCKER_REGISTRY }}/$USERNAME"
           DOCKER_IMAGE=$(ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT")
           
           echo "::set-output name=docker-image::$DOCKER_IMAGE"
