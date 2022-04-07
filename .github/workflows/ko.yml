@@ -99,7 +99,6 @@ jobs:
         uses: actions/checkout@v2
         
       - name: Generate predicate
-        id: gen-predicate
         run: |
           set -euo pipefail
           
@@ -176,10 +175,15 @@ jobs:
           ## ======== end testing
           
           export COSIGN_EXPERIMENTAL=1          
+          echo cosign attest --predicate "$PREDICATE_FILE" \
+            --type "slsaprovenance" \
+            --oidc-client-secret-file jwt.json \
+            "$UNTRUSTED_GITHUB_IMAGE"
+            
           cosign attest --predicate "$PREDICATE_FILE" \
             --type "slsaprovenance" \
             --oidc-client-secret-file jwt.json \
-            "${{ env.GITHUB_REGISTRY }}/$PROJECT:$UNTRUSTED_DOCKER_IMAGE"
+            "$UNTRUSTED_GITHUB_IMAGE"
                   
       - name: Docker upload
         env:
@@ -200,7 +204,7 @@ jobs:
           export COSIGN_EXPERIMENTAL=1
           cosign attest --predicate "$PREDICATE_FILE" \
             --type "slsaprovenance" \
-            "${{ env.DOCKER_REGISTRY }}/$PROJECT:$UNTRUSTED_DOCKER_IMAGE"
+            "$UNTRUSTED_DOCKER_IMAGE"
 
           
          
