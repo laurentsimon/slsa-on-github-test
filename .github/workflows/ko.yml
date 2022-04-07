@@ -150,38 +150,40 @@ jobs:
       # Note: here we need packages permissions
       - name: Github upload
         env:
-          PREDICATE: ${{ steps.gen-predicate.outputs.filename }}
+          PREDICATE_FILE: ${{ steps.gen-predicate.outputs.filename }}
         if: ${{ github.event.inputs.registry == env.GITHUB_REGISTRY}}
         run: |
           set -euo pipefail
-          echo "uploading to ${{ github.event.inputs.registry }}: $UNTRUSTED_PROVENANCE_FILENAME"
+          echo "uploading to ${{ github.event.inputs.registry }}: $PREDICATE_FILE"
           
           # verify logs
           #echo "$GIHUB_TOKEN" | docker login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" --password-stdin
           ko login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" -p "$GIHUB_TOKEN"
           
           export COSIGN_EXPERIMENTAL=1          
-          cosign attest --predicate "$PREDICATE" \
+          cosign attest --predicate "$PREDICATE_FILE" \
             --type "slsaprovenance" \
             "$PROJECT:$UNTRUSTED_DOCKER_IMAGE"
                   
       - name: Docker upload
+        env:
+          PREDICATE_FILE: ${{ steps.gen-predicate.outputs.filename }}
         if: ${{ github.event.inputs.registry == env.DOCKER_REGISTRY}}
         run: |
           set -euo pipefail
-          echo "uploading to ${{ github.event.inputs.registry }}: $UNTRUSTED_PROVENANCE_FILENAME"
+          echo "uploading to ${{ github.event.inputs.registry }}: $PREDICATE_FILE"
           
           # verify logs
           ko login "${{ env.DOCKER_REGISTRY }}" -u "$USERNAME" -p "$DOCKER_TOKEN"
             
           #cosign upload blob -ct "application/vnd.dsse.envelope.v1+json" \
-          #  -f "$UNTRUSTED_PROVENANCE_FILENAME" \
+          #  -f "$PREDICATE_FILE" \
           #  "$PROJECT:$UNTRUSTED_PROVENANCE_FILENAME"
         
           # Somehow this seems to work without authentication to Docker. Why?
           export COSIGN_EXPERIMENTAL=1
           #TODO: update name to predicate
-          echo cosign attest --predicate "$PREDICATE" \
+          echo cosign attest --predicate "$PREDICATE_FILE" \
             --type "slsaprovenance" \
             "$UNTRUSTED_DOCKER_IMAGE"
 
