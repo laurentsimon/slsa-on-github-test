@@ -113,9 +113,19 @@ jobs:
             exit 2
           fi
           
-          echo "image is: $CONTAINER_IMAGE"
+          CONTAINER_PROVENANCE="$CONTAINER_IMAGE.intoto.jsonl"
           
-          echo "::set-output name=filename::$CONTAINER_IMAGE.intoto.jsonl"
+          echo "image is: $CONTAINER_IMAGE"
+          echo "provenance is: $CONTAINER_PROVENANCE"
+          
+          
+          # testing. Use a local file containing provenance.
+          CONTAINER_SHA256=$(echo $CONTAINER_IMAGE | cut -d "@" -f2 | cut -d ":" -f2)
+          
+          
+          echo "provenance for container with digest $CONTAINER_SHA256" > "$CONTAINER_PROVENANCE"
+          
+          echo "::set-output name=filename::$CONTAINER_PROVENANCE"
           echo "::set-output name=sha256::prov-hash"
   
   provenance-upload:
@@ -125,7 +135,9 @@ jobs:
       UNTRUSTED_PROVENANCE_FILENAME: "${{ needs.provenance-generation.outputs.filename }}"
       PROVENANCE_SHA256: "${{ needs.provenance-generation.outputs.sha256 }}"
       GIHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      DOCKER_TOKEN: ${{.secrets.DOCKER_TOKEN }}
       USERNAME: laurentsimon
+      PROJECT: laurentsimon/helloworld
     steps:
       # We may be able to have a generic provenance uploader, but for now let's seperate to keep things simple.
       - name: Github upload
@@ -149,9 +161,16 @@ jobs:
           echo "uploading to ${{ github.event.inputs.registry }}: $UNTRUSTED_PROVENANCE_FILENAME"
           
           # verify logs
-          #echo "$GIHUB_TOKEN" | docker login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" --password-stdin
           ko login "${{ env.DOCKER_REGISTRY }}" -u "$USERNAME" -p "$DOCKER_TOKEN"
           
+          echo cosign upload blob -ct "application/vnd.dsse.envelope.v1+json" \
+            -f "$UNTRUSTED_PROVENANCE_FILENAME" \
+            "$PROJECT:$UNTRUSTED_PROVENANCE_FILENAME"
+            
+          cosign upload blob -ct "application/vnd.dsse.envelope.v1+json" \
+            -f "$UNTRUSTED_PROVENANCE_FILENAME" \
+            "$PROJECT:$UNTRUSTED_PROVENANCE_FILENAME"
+
           # TODO: upload our provenance blob
           #TODO: verify hash
           echo "sha256: $PROVENANCE_SHA256"
