@@ -179,7 +179,7 @@ jobs:
           cosign attest --predicate "$PREDICATE_FILE" \
             --type "slsaprovenance" \
             --oidc-client-secret-file jwt.json \
-            "$PROJECT:$UNTRUSTED_DOCKER_IMAGE"
+            "${{ env.GITHUB_REGISTRY }}/$PROJECT:$UNTRUSTED_DOCKER_IMAGE"
                   
       - name: Docker upload
         env:
@@ -200,7 +200,7 @@ jobs:
           export COSIGN_EXPERIMENTAL=1
           cosign attest --predicate "$PREDICATE_FILE" \
             --type "slsaprovenance" \
-            "$UNTRUSTED_DOCKER_IMAGE"
+            "${{ env.DOCKER_REGISTRY }}/$PROJECT:$UNTRUSTED_DOCKER_IMAGE"
 
           
          
