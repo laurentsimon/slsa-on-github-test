@@ -117,24 +117,30 @@ jobs:
           
           echo "image is: $CONTAINER_IMAGE"
           
+          echo "TODO: generate provenance dynamically"
+          
           
           #TODO: generate PROJECT dynamically using the URL
           # testing. Use a local file containing provenance.
           CONTAINER_SHA256=$(echo $CONTAINER_IMAGE | cut -d "@" -f2 | cut -d ":" -f2)
-          CONTAINER_PROVENANCE="sha256-$CONTAINER_SHA256.intoto.jsonl"
+          CONTAINER_PROVENANCE="predicate-sha256-$CONTAINER_SHA256.json"
+          
           echo "provenance is: $CONTAINER_PROVENANCE"
           
-          echo "TODO: upload artifact"
-          
-          echo "provenance for container with digest $CONTAINER_SHA256" > "$CONTAINER_PROVENANCE"
+          export DATA="ewogICJidWlsZGVyIjogewogICAgImlkIjogImh0dHBzOi8vZ2l0aHViLmNvbS9zbHNhLWZyYW1ld29yay9zbHNhLWdpdGh1Yi1nZW5lcmF0b3ItZ28vLmdpdGh1Yi93b3JrZmxvd3MvYnVpbGRlci55bWxAcmVmcy9oZWFkcy9tYWluIgogIH0sCiAgImJ1aWxkVHlwZSI6ICJodHRwczovL2dpdGh1Yi5jb20vc2xzYS1mcmFtZXdvcmsvc2xzYS1naXRodWItZ2VuZXJhdG9yLWdvQHYxIiwKICAiaW52b2NhdGlvbiI6IHsKICAgICJjb25maWdTb3VyY2UiOiB7CiAgICAgICJ1cmkiOiAiZ2l0K2h0dHBzOi8vZ2l0aHViLmNvbWxhdXJlbnRzaW1vbi9zbHNhLW9uLWdpdGh1Yi10ZXN0QHJlZnMvaGVhZHMvbWFpbi5naXQiLAogICAgICAiZGlnZXN0IjogewogICAgICAgICJzaGExIjogImQzZmQ5NDgyZTY4ZDI3NmU2OWMwYThiM2Y3ZWFhYmIzYjllNTY2OTUiCiAgICAgIH0sCiAgICAgICJlbnRyeVBvaW50IjogIlNMU0EgUmVsZWFzZSIKICAgIH0sCiAgICAicGFyYW1ldGVycyI6IHsKICAgICAgInZlcnNpb24iOiAxLAogICAgICAicmVmX3R5cGUiOiAiYnJhbmNoIiwKICAgICAgInJlZiI6ICJyZWZzL2hlYWRzL21haW4iLAogICAgICAiYmFzZV9yZWYiOiAiIiwKICAgICAgImhlYWRfcmVmIjogIiIsCiAgICAgICJhY3RvciI6ICJsYXVyZW50c2ltb24iLAogICAgICAic2hhMSI6ICJkM2ZkOTQ4MmU2OGQyNzZlNjljMGE4YjNmN2VhYWJiM2I5ZTU2Njk1IgogICAgfSwKICAgICJlbnZpcm9ubWVudCI6IHsKICAgICAgImFyY2giOiAiYW1kNjQiLAogICAgICAiZ2l0aHViX2V2ZW50X25hbWUiOiAid29ya2Zsb3dfZGlzcGF0Y2giLAogICAgICAiZ2l0aHViX3J1bl9hdHRlbXB0IjogIjEiLAogICAgICAiZ2l0aHViX3J1bl9pZCI6ICIyMDkwODQxMjYzIiwKICAgICAgImdpdGh1Yl9ydW5fbnVtYmVyIjogIjE4IiwKICAgICAgIm9zIjogInVidW50dSIKICAgIH0KICB9LAogICJidWlsZENvbmZpZyI6IHsKICAgICJ2ZXJzaW9uIjogMSwKICAgICJzdGVwcyI6IFsKICAgICAgewogICAgICAgICJjb21tYW5kIjogWwogICAgICAgICAgIi9vcHQvaG9zdGVkdG9vbGNhY2hlL2dvLzEuMTcuOC94NjQvYmluL2dvIiwKICAgICAgICAgICJidWlsZCIsCiAgICAgICAgICAiLW1vZD12ZW5kb3IiLAogICAgICAgICAgIi10cmltcGF0aCIsCiAgICAgICAgICAiLXRhZ3M9bmV0Z28iLAogICAgICAgICAgIi1vIiwKICAgICAgICAgICJiaW5hcnktbGludXgtYW1kNjQiCiAgICAgICAgXSwKICAgICAgICAiZW52IjogWwogICAgICAgICAgIkdPT1M9bGludXgiLAogICAgICAgICAgIkdPQVJDSD1hbWQ2NCIsCiAgICAgICAgICAiR08xMTFNT0RVTEU9b24iLAogICAgICAgICAgIkNHT19FTkFCTEVEPTAiCiAgICAgICAgXQogICAgICB9CiAgICBdCiAgfSwKICAibWF0ZXJpYWxzIjogWwogICAgewogICAgICAidXJpIjogImdpdCtsYXVyZW50c2ltb24vc2xzYS1vbi1naXRodWItdGVzdC5naXQiLAogICAgICAiZGlnZXN0IjogewogICAgICAgICJzaGExIjogImQzZmQ5NDgyZTY4ZDI3NmU2OWMwYThiM2Y3ZWFhYmIzYjllNTY2OTUiCiAgICAgIH0KICAgIH0KICBdCn0="
+          #echo "TODO: upload artifact"
+          PROVENANCE_DATA=$(echo -n "$DATA" | base64 -d)
+          echo -n "$PROVENANCE_DATA" > "$CONTAINER_PROVENANCE"
           
           echo "::set-output name=filename::$CONTAINER_PROVENANCE"
           echo "::set-output name=sha256::prov-hash"
   
   provenance-upload:
     runs-on: ubuntu-latest
-    needs: provenance-generation
+    needs: [build-release,provenance-generation]
     env:
+      UNTRUSTED_DOCKER_IMAGE: "${{ needs.build-release.outputs.docker-image }}"
+      UNTRUSTED_GITHUB_IMAGE: "${{ needs.build-release.outputs.github-image }}"
       UNTRUSTED_PROVENANCE_FILENAME: "${{ needs.provenance-generation.outputs.filename }}"
       PROVENANCE_SHA256: "${{ needs.provenance-generation.outputs.sha256 }}"
       GIHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -169,13 +175,15 @@ jobs:
           #TODO: download artifact
           echo "provenance for container is BLABLA" > "$UNTRUSTED_PROVENANCE_FILENAME"
           
-          echo cosign upload blob -ct "application/vnd.dsse.envelope.v1+json" \
-            -f "$UNTRUSTED_PROVENANCE_FILENAME" \
-            "$PROJECT:$UNTRUSTED_PROVENANCE_FILENAME"
-            
-          cosign upload blob -ct "application/vnd.dsse.envelope.v1+json" \
-            -f "$UNTRUSTED_PROVENANCE_FILENAME" \
-            "$PROJECT:$UNTRUSTED_PROVENANCE_FILENAME"
+          #cosign upload blob -ct "application/vnd.dsse.envelope.v1+json" \
+          #  -f "$UNTRUSTED_PROVENANCE_FILENAME" \
+          #  "$PROJECT:$UNTRUSTED_PROVENANCE_FILENAME"
+        
+          export COSIGN_EXPERIMENTAL=1
+          #TODO: update name to predicate
+          cosign attest --predicate "$UNTRUSTED_PROVENANCE_FILENAME" \
+            --type "slsaprovenance" \
+            "$UNTRUSTED_DOCKER_IMAGE"
 
           # TODO: upload our provenance blob
           #TODO: verify hash
