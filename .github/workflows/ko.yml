@@ -125,11 +125,20 @@ jobs:
     env:
       UNTRUSTED_PROVENANCE_FILENAME: "${{ needs.provenance-generation.outputs.filename }}"
       PROVENANCE_SHA256: "${{ needs.provenance-generation.outputs.sha256 }}"
+      GIHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      USERNAME: laurentsimon
     steps:
+      # We may be able to have a generic provenance uploader, but for now let's seperate to keep things simple.
       - name: Docker upload
+        if: ${{ github.event.inputs.registry == env.GITHUB_REGISTRY}}
         run: |
           set -euo pipefail
           echo "uploading: $UNTRUSTED_PROVENANCE_FILENAME"
+          
+          # verify logs
+          echo "$GIHUB_TOKEN" | docker login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" --password-stdin
+          
+          docker push "$UNTRUSTED_PROVENANCE_FILENAME"
           #TODO: verify hash
           echo "sha256: $PROVENANCE_SHA256"
          
