@@ -191,15 +191,16 @@ jobs:
           # "ghcr.io/laurentsimon/slsa-on-github-test/helloworld" appears to be a private repository, please confirm uploading to the transparency log at "https://rekor.sigstore.dev" [Y/N]: 
           # WARNING: skipping transparency log upload (use --force to upload from scripts)
           
+          # --oidc-client-secret-file
           echo cosign attest --predicate "$UNTRUSTED_PREDICATE_FILE" \
             --type "slsaprovenance" \
-            --identity-token jwt.json \
+            --identity-token "$(cat jwt.json)" \
             --force \
             "$UNTRUSTED_CONTAINER_IMAGE"
             
           COSIGN_EXPERIMENTAL=1 cosign attest --predicate "$UNTRUSTED_PREDICATE_FILE" \
             --type "slsaprovenance" \
-            --identity-token jwt.json \
+            --identity-token "$(cat jwt.json)" \
             "$UNTRUSTED_CONTAINER_IMAGE"
 
           
