@@ -181,7 +181,7 @@ jobs:
       - name: Upload
         env:
           PREDICATE_FILE: "${{ steps.gen-predicate.outputs.filename }}"
-          SCORECARD_EXPIRIMENTAL: 1
+          COSIGN_EXPIRIMENTAL: 1
         run: |
           set -euo pipefail
             
