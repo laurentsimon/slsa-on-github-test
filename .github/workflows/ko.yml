@@ -55,8 +55,8 @@ jobs:
           echo ko login "${{ env.DOCKER_REGISTRY }}" -u "$USERNAME" -p "$DOCKER_TOKEN"
           ko login "${{ env.DOCKER_REGISTRY }}" -u "$USERNAME" -p "$DOCKER_TOKEN"
           
-          # Note: this will be done in Go.
-          # Note 2: we will use a dr-run to generate the command.
+          # Note: this will be done in Go via an exec and to set up env variables.
+          # Note 2: we will use a dry-run to generate the command for provenance in a separate job.
           export KO_DOCKER_REPO="${{ env.DOCKER_REGISTRY }}/$USERNAME"
           DOCKER_IMAGE=$(ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT")
           
@@ -73,6 +73,8 @@ jobs:
           
           echo ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT"
           
+          # Note: this will be done in Go via an exec and to set up env variables.
+          # Note 2: we will use a dry-run to generate the command for provenance in a separate job.
           GITHUB_IMAGE=$(ko publish -B --platform "$PLATFORMS" --tags "$TAGS" "$PROJECT")
           
           echo "github-image is $GITHUB_IMAGE"
@@ -102,10 +104,7 @@ jobs:
         id: gen-predicate
         run: |
           set -euo pipefail
-          
-          # Note: let's do that without using docker binary if possible. Can use cosign APIs?
-          echo "TODO: pull the image and verify its digest"
-          
+            
           CONTAINER_IMAGE=""
   
           if [[ ! -z "$UNTRUSTED_DOCKER_IMAGE" ]]; then
@@ -156,10 +155,13 @@ jobs:
        # TODO: downlaoading and pinning the download instead
       # remko/dsadmin/blob/7a6939179bc56b1be28cada040f2b4a148e3e14a/.github/workflows/publish-release.yml
       # TODO: here we may use each ecosystem's login action instead.
-      - name: Setup Ko
-        uses: imjasonh/setup-ko@v0.4
+#       - name: Setup Ko
+#         uses: imjasonh/setup-ko@v0.4
 
       # Note: here we need packages permissions
+      # TODO: here we may use each ecosystem's login action instead,
+      # or use cosign login
+      - uses: sigstore/cosign-installer@d6a3abf1bdea83574e28d40543793018b6035605
       - name: Login github
         if: ${{ github.event.inputs.registry == env.GITHUB_REGISTRY}}
         run: |
@@ -168,7 +170,8 @@ jobs:
           # verify logs
           #echo "$GIHUB_TOKEN" | docker login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" --password-stdin
           
-          ko login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" -p "$GIHUB_TOKEN"
+          #ko login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" -p "$GIHUB_TOKEN"
+          cosign login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" -p "$GIHUB_TOKEN"
                   
       - name: Login docker
         if: ${{ github.event.inputs.registry == env.DOCKER_REGISTRY}}
@@ -176,9 +179,10 @@ jobs:
           set -euo pipefail
           
           # verify logs
-          ko login "${{ env.DOCKER_REGISTRY }}" -u "$USERNAME" -p "$DOCKER_TOKEN"
+          #ko login "${{ env.DOCKER_REGISTRY }}" -u "$USERNAME" -p "$DOCKER_TOKEN"
+          cosign login "${{ env.DOCKER_REGISTRY }}" -u "$USERNAME" -p "$DOCKER_TOKEN"
       
-      - uses: sigstore/cosign-installer@d6a3abf1bdea83574e28d40543793018b6035605
+      #- uses: sigstore/cosign-installer@d6a3abf1bdea83574e28d40543793018b6035605
       - name: Upload
         env:
           UNTRUSTED_PREDICATE_FILE: "${{ steps.gen-predicate.outputs.filename }}"
