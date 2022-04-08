@@ -137,6 +137,7 @@ jobs:
           echo -n "$PROVENANCE_DATA" > "$CONTAINER_PROVENANCE"
           
           echo "::set-output name=filename::$CONTAINER_PROVENANCE"
+          echo "::set-output name=image::$CONTAINER_IMAGE"
           
       # We may be able to have a generic provenance uploader, but for now let's seperate to keep things simple.
       #TODO: can pull a static image and verify provenance
@@ -180,7 +181,8 @@ jobs:
       - uses: sigstore/cosign-installer@d6a3abf1bdea83574e28d40543793018b6035605
       - name: Upload
         env:
-          PREDICATE_FILE: "${{ steps.gen-predicate.outputs.filename }}"
+          UNTRUSTED_PREDICATE_FILE: "${{ steps.gen-predicate.outputs.filename }}"
+          UNTRUSTED_CONTAINER_IMAGE: "${{ steps.gen-predicate.outputs.image }}"
         run: |
           set -euo pipefail
             
@@ -189,16 +191,16 @@ jobs:
           # "ghcr.io/laurentsimon/slsa-on-github-test/helloworld" appears to be a private repository, please confirm uploading to the transparency log at "https://rekor.sigstore.dev" [Y/N]: 
           # WARNING: skipping transparency log upload (use --force to upload from scripts)
           
-          echo cosign attest --predicate "$PREDICATE_FILE" \
+          echo cosign attest --predicate "$UNTRUSTED_PREDICATE_FILE" \
             --type "slsaprovenance" \
             --oidc-client-secret-file jwt.json \
             --force \
-            "$UNTRUSTED_GITHUB_IMAGE"
+            "$UNTRUSTED_CONTAINER_IMAGE"
             
-          COSIGN_EXPERIMENTAL=1 cosign attest --predicate "$PREDICATE_FILE" \
+          COSIGN_EXPERIMENTAL=1 cosign attest --predicate "$UNTRUSTED_PREDICATE_FILE" \
             --type "slsaprovenance" \
             --oidc-client-secret-file jwt.json \
-            "$UNTRUSTED_GITHUB_IMAGE"
+            "$UNTRUSTED_CONTAINER_IMAGE"
 
           
          
