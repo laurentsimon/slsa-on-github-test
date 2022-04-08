@@ -193,13 +193,13 @@ jobs:
           
           echo cosign attest --predicate "$UNTRUSTED_PREDICATE_FILE" \
             --type "slsaprovenance" \
-            --oidc-client-secret-file jwt.json \
+            --identity-token jwt.json \
             --force \
             "$UNTRUSTED_CONTAINER_IMAGE"
             
           COSIGN_EXPERIMENTAL=1 cosign attest --predicate "$UNTRUSTED_PREDICATE_FILE" \
             --type "slsaprovenance" \
-            --oidc-client-secret-file jwt.json \
+            --identity-token jwt.json \
             "$UNTRUSTED_CONTAINER_IMAGE"
 
           
