@@ -191,13 +191,13 @@ jobs:
           # "ghcr.io/laurentsimon/slsa-on-github-test/helloworld" appears to be a private repository, please confirm uploading to the transparency log at "https://rekor.sigstore.dev" [Y/N]: 
           # WARNING: skipping transparency log upload (use --force to upload from scripts)
                     
-          export JWT=$(cat jwt.json | jq -r '.value')
-          if [ -z $JWT ]; then
-            echo "OIDC token parsing failure: value could not be retrieved"
-            exit 1;
-          fi
+          #export JWT=$(cat jwt.json | jq -r '.value')
+          #if [ -z $JWT ]; then
+          #  echo "OIDC token parsing failure: value could not be retrieved"
+          #  exit 1;
+          #fi
           
-          echo -n "$JWT" | base64 --wrap=0
+          #echo -n "$JWT" | base64 --wrap=0
           
           # --oidc-client-secret-file jwt.json
           echo cosign attest --predicate "$UNTRUSTED_PREDICATE_FILE" \
