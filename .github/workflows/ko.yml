@@ -181,7 +181,6 @@ jobs:
       - name: Upload
         env:
           PREDICATE_FILE: "${{ steps.gen-predicate.outputs.filename }}"
-          COSIGN_EXPIRIMENTAL: 1
         run: |
           set -euo pipefail
             
@@ -196,7 +195,7 @@ jobs:
             --force \
             "$UNTRUSTED_GITHUB_IMAGE"
             
-          cosign attest --predicate "$PREDICATE_FILE" \
+          COSIGN_EXPERIMENTAL=1 cosign attest --predicate "$PREDICATE_FILE" \
             --type "slsaprovenance" \
             --oidc-client-secret-file jwt.json \
             "$UNTRUSTED_GITHUB_IMAGE"
