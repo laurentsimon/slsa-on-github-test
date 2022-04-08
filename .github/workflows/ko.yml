@@ -140,72 +140,63 @@ jobs:
           
       # We may be able to have a generic provenance uploader, but for now let's seperate to keep things simple.
       #TODO: can pull a static image and verify provenance
-      - uses: sigstore/cosign-installer@d6a3abf1bdea83574e28d40543793018b6035605
-      
-      # TODO: downlaoading and pinning the download instead
-      # remko/dsadmin/blob/7a6939179bc56b1be28cada040f2b4a148e3e14a/.github/workflows/publish-release.yml
-      
-      # TODO: here we may use each ecosystem's login action instead.
-      - name: Setup Ko
-        uses: imjasonh/setup-ko@v0.4
-
-      # Note: here we need packages permissions
-      - name: Github upload
-        env:
-          PREDICATE_FILE: ${{ steps.gen-predicate.outputs.filename }}
-        if: ${{ github.event.inputs.registry == env.GITHUB_REGISTRY}}
+        
+      - name: Fetch OIDC token
         run: |
           set -euo pipefail
-          echo "uploading to ${{ github.event.inputs.registry }}: $PREDICATE_FILE"
           
-          # verify logs
-          #echo "$GIHUB_TOKEN" | docker login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" --password-stdin
-          
-          # Option: --oidc-client-secret-file
-          ko login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" -p "$GIHUB_TOKEN"
-          
-          ## ============ testing
-          #--oidc-client-secret-file
           status_code=$(curl -sS -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=slsa-framework/slsa-github-generator-go/builder" -o jwt.json -w '%{http_code}')
           if [[ $status_code -ge 400 ]]; then
               error_msg=$(jq -r .message jwt.json 2>/dev/null || echo 'unknown error')
               echo "Failed to get OIDC token from GitHub, response $status_code: $error_msg"
               exit 1;
           fi
-                    
-          ## ======== end testing
+
+       # TODO: downlaoading and pinning the download instead
+      # remko/dsadmin/blob/7a6939179bc56b1be28cada040f2b4a148e3e14a/.github/workflows/publish-release.yml
+      # TODO: here we may use each ecosystem's login action instead.
+      - name: Setup Ko
+        uses: imjasonh/setup-ko@v0.4
+
+      # Note: here we need packages permissions
+      - name: Login github
+        if: ${{ github.event.inputs.registry == env.GITHUB_REGISTRY}}
+        run: |
+          set -euo pipefail
           
-          export COSIGN_EXPERIMENTAL=1          
-          echo cosign attest --predicate "$PREDICATE_FILE" \
-            --type "slsaprovenance" \
-            --oidc-client-secret-file jwt.json \
-            "$UNTRUSTED_GITHUB_IMAGE"
-            
-          cosign attest --predicate "$PREDICATE_FILE" \
-            --type "slsaprovenance" \
-            --oidc-client-secret-file jwt.json \
-            "$UNTRUSTED_GITHUB_IMAGE"
+          # verify logs
+          #echo "$GIHUB_TOKEN" | docker login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" --password-stdin
+          
+          ko login "${{ env.GITHUB_REGISTRY }}" -u "$USERNAME" -p "$GIHUB_TOKEN"
                   
-      - name: Docker upload
-        env:
-          PREDICATE_FILE: ${{ steps.gen-predicate.outputs.filename }}
+      - name: Login docker
         if: ${{ github.event.inputs.registry == env.DOCKER_REGISTRY}}
         run: |
           set -euo pipefail
-          echo "uploading to ${{ github.event.inputs.registry }}: $PREDICATE_FILE"
           
           # verify logs
           ko login "${{ env.DOCKER_REGISTRY }}" -u "$USERNAME" -p "$DOCKER_TOKEN"
+      
+      - uses: sigstore/cosign-installer@d6a3abf1bdea83574e28d40543793018b6035605
+      - name: Upload
+        run: |
+          set -euo pipefail
             
-          #cosign upload blob -ct "application/vnd.dsse.envelope.v1+json" \
-          #  -f "$PREDICATE_FILE" \
-          #  "$PROJECT:$UNTRUSTED_PROVENANCE_FILENAME"
-        
-          # Somehow this seems to work without authentication to Docker. Why?
-          export COSIGN_EXPERIMENTAL=1
+          # Note: --force uploads to rekor
+          # This MUST be an option (??)
+          # "ghcr.io/laurentsimon/slsa-on-github-test/helloworld" appears to be a private repository, please confirm uploading to the transparency log at "https://rekor.sigstore.dev" [Y/N]: 
+          # WARNING: skipping transparency log upload (use --force to upload from scripts)
+          
+          echo cosign attest --predicate "$PREDICATE_FILE" \
+            --type "slsaprovenance" \
+            --oidc-client-secret-file jwt.json \
+            --force \
+            "$UNTRUSTED_GITHUB_IMAGE"
+            
           cosign attest --predicate "$PREDICATE_FILE" \
             --type "slsaprovenance" \
-            "$UNTRUSTED_DOCKER_IMAGE"
+            --oidc-client-secret-file jwt.json \
+            "$UNTRUSTED_GITHUB_IMAGE"
 
           
          
