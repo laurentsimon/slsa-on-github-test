@@ -179,6 +179,8 @@ jobs:
       
       - uses: sigstore/cosign-installer@d6a3abf1bdea83574e28d40543793018b6035605
       - name: Upload
+        env:
+          PREDICATE_FILE: "${{ steps.gen-predicate.outputs.filename }}"
         run: |
           set -euo pipefail
             
