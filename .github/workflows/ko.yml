@@ -18,10 +18,48 @@ permissions: read-all
 env:
   DOCKER_REGISTRY: docker.io
   GITHUB_REGISTRY: ghcr.io
+  BUILDER_FILE: builder
 
 jobs:
+  build-builder:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      builder-sha256: ${{ steps.build-builder.outputs.sha256 }}
+    steps:
+      - name: Build builder
+        id: build-builder
+        run: |
+          set -euo pipefail
+          
+          echo "building the builder"
+          echo "::set-output name=builder-sha256::abcedfg"
+      
+  build-dry:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    needs: [build-builder]
+    outputs:
+      command: ${{ steps.build-dry.outputs.command }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        
+      - name: Dry build
+        id: build-dry
+        run: |
+          set -euo pipefail
+          
+          # TODO: verify hash
+          echo "running the builder "
+          echo "::set-output name=command::this is a command!"
+        
   build-release:
     runs-on: ubuntu-latest
+    needs: [build-builder]
     permissions:
       contents: read
       packages: write
@@ -83,7 +121,7 @@ jobs:
   
   provenance:
     runs-on: ubuntu-latest
-    needs: build-release
+    needs: [build-dry,build-release]
     permissions:
       packages: write
       contents: read
@@ -91,6 +129,8 @@ jobs:
     env:
       UNTRUSTED_DOCKER_IMAGE: "${{ needs.build-release.outputs.docker-image }}"
       UNTRUSTED_GITHUB_IMAGE: "${{ needs.build-release.outputs.github-image }}"
+      UNTRUSTED_COMMAND: "${{ needs.build-dry.outputs.command }}"
+      # Rename all these to be non-trusted
       GIHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
       USERNAME: laurentsimon
@@ -121,7 +161,7 @@ jobs:
           echo "image is: $CONTAINER_IMAGE"
           
           echo "TODO: generate provenance dynamically"
-          
+          echo "command: $UNTRUSTED_COMMAND"
           
           #TODO: generate PROJECT dynamically using the URL
           # testing. Use a local file containing provenance.
