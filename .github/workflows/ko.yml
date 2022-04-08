@@ -209,6 +209,7 @@ jobs:
           #--identity-token "$JWT" \
           COSIGN_EXPERIMENTAL=1 cosign attest --predicate "$UNTRUSTED_PREDICATE_FILE" \
             --type "slsaprovenance" \
+             --force \
             "$UNTRUSTED_CONTAINER_IMAGE"
 
           
