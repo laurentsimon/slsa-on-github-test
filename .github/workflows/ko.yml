@@ -198,11 +198,11 @@ jobs:
           #fi
           
           #echo -n "$JWT" | base64 --wrap=0
+          # --identity-token "$JWT"
           
           # --oidc-client-secret-file jwt.json
           echo cosign attest --predicate "$UNTRUSTED_PREDICATE_FILE" \
             --type "slsaprovenance" \
-            --identity-token "$JWT" \
             --force \
             "$UNTRUSTED_CONTAINER_IMAGE"
             
