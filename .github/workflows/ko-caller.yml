@@ -1,4 +1,4 @@
-name: KO Release
+name: Ko Caller
 
 on: 
   workflow_dispatch:
