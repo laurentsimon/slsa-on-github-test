@@ -18,6 +18,8 @@ jobs:
     uses: laurentsimon/slsa-on-github-test/.github/workflows/ko-builder.yml@main
     with:
       args: -B --platform=linux/amd64,linux/arm64,linux/386,linux/arm --tags=tag5,tag6 laurentsimon/helloworld
+      username: laurentsimon
+      password: ${{ secrets.DOCKER_TOKEN }}
 
   upload:
     runs-on: ubuntu-latest
