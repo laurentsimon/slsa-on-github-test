@@ -35,7 +35,7 @@ on:
         required: true
         type: string
     outputs:
-      image-oci:
+      image:
         description: "The full path to the generated container image"
         value: ${{ jobs.build-release.outputs.image }}
 
