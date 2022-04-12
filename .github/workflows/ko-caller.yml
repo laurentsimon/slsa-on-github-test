@@ -10,7 +10,6 @@ permissions: read-all
 
 jobs:
   build:
-    name: KO SLSA builder
     permissions:
       id-token: write
       contents: read
