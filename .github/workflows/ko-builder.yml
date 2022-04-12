@@ -89,7 +89,7 @@ jobs:
           set -euo pipefail
           
           echo "building the builder"
-          echo "::set-output name=builder-sha256::abcedfg"
+          echo "::set-output name=sha256::abcedfg"
           
       - name: Upload builder
         run: |
