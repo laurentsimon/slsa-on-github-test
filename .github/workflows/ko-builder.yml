@@ -37,7 +37,7 @@ on:
     outputs:
       image-oci:
         description: "The full path to the generated container image"
-        value: ${{ jobs.build-release.outputs.image-oci }}
+        value: ${{ jobs.build-release.outputs.image }}
 
 
 jobs:
