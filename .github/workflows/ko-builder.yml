@@ -131,7 +131,7 @@ jobs:
       UNTRUSTED_USERNAME: ${{ inputs.username }}
       UNTRUSTED_ARGS: ${{ inputs.args }}
     outputs:
-      image: ${{ steps.docker.outputs.image }}
+      image: ${{ steps.build-push.outputs.image }}
     steps:
       #TODO: step to verify registry
       - name: Checkout
@@ -153,6 +153,7 @@ jobs:
           ko login "${{ env.DOCKER_REGISTRY }}" -u "$UNTRUSTED_USERNAME" -p "$UNTRUSTED_PASSWORD"
   
       - name: Build and push
+        id: build-push
         run: |
           set -euo pipefail
           
