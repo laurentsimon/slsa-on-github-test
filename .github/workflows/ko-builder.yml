@@ -102,6 +102,8 @@ jobs:
     permissions:
       contents: read
     needs: [build-builder]
+    env:
+      BUILDER_SHA256: "${{ needs.build-builder.outputs.builder-sha256 }}"
     outputs:
       command: ${{ steps.build-dry.outputs.command }}
     
@@ -115,7 +117,7 @@ jobs:
           set -euo pipefail
           
           # TODO: verify hash
-          echo "running the builder "
+          echo "running the builder ${{ env.BUILDER_BINARY }} with hash "$BUILDER_SHA256""
           echo "::set-output name=command::this is a command!"
         
   build-release:
@@ -158,7 +160,7 @@ jobs:
           # Note 2: we will use a dry-run to generate the command for provenance in a separate job.
           # Note 3: we will use the value provided by the user and set env autoatically, so we
           # won't need to set this explicitely.
-          export KO_DOCKER_REPO="$REGISTRY/$USERNAME"
+          export KO_DOCKER_REPO="${{ env.DOCKER_REGISTRY }}/$USERNAME"
           
           #TODO: take these arguments from args and use exec in Go.
           IMAGE=$(ko publish $UNTRUSTED_ARGS)
@@ -175,8 +177,8 @@ jobs:
     env:
       UNTRUSTED_IMAGE: "${{ needs.build-release.outputs.image }}"
       UNTRUSTED_COMMAND: "${{ needs.build-dry.outputs.command }}"
-      UNTRUSTED_PASSWORD: ${{ secrets.password }}
-      UNTRUSTED_USERNAME: ${{ inputs.username }}
+      UNTRUSTED_PASSWORD: "${{ secrets.password }}"
+      UNTRUSTED_USERNAME: "${{ inputs.username }}"
       
     steps:
       - name: Checkout
