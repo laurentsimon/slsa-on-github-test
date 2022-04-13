@@ -18,5 +18,5 @@ func main() {
 
 	fmt.Println("GitVersion", gitVersion)
 	fmt.Println("GitSomething", gitSomething)
-	fmt.Println("Hello world", uuid)
+	fmt.Println("Hello world 2", uuid)
 }
