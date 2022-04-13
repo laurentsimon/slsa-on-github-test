@@ -19,6 +19,7 @@ jobs:
     with:
       args: -B --platform=linux/amd64,linux/arm64,linux/386,linux/arm --tags=tag5,tag6 laurentsimon/helloworld
       username: laurentsimon
+      envs: KO_DOCKER_REPO=laurentsimon/helloworld
     secrets:
       password: ${{ secrets.DOCKER_TOKEN }}
 
