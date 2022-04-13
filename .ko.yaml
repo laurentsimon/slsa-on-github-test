@@ -8,6 +8,7 @@ builds:
   - -tags
   - netgo
   ldflags:
-#   - -s -w
-#   - -extldflags "-static"
-#   - -X main.version={{.Env.VERSION}}
+  - -s -w
+  - -extldflags "-static"
+  - -X main.gitVersion={{.Env.GIT_VERSION}}
+  - -X main.gitSomething={{.Env.GIT_SOMETHING}}
