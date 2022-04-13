@@ -25,6 +25,7 @@ jobs:
           echo "::set-output name=something::something-fun"
           
   build:
+    needs: args
     permissions:
       id-token: write
       contents: read
