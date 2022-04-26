@@ -18,7 +18,7 @@ jobs:
     uses: laurentsimon/slsa-github-generator-go/.github/workflows/slsa3_builder.yml@feat/assets
     with:
       go-version: 1.17
-      upload-assets: true
+      #upload-assets: true
       #upload-assets: false
 
   upload:
