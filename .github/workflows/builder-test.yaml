@@ -13,8 +13,7 @@ jobs:
     name: SLSA Golang builder
     permissions:
       id-token: write # For signing
-      #contents: write # For asset uploads
-      contents: read
+      contents: write # For asset uploads. Always needed, even when not setting `upload-assets: false` :/
     #uses: slsa-framework/slsa-github-generator-go/.github/workflows/slsa3_builder.yml@main
     uses: laurentsimon/slsa-github-generator-go/.github/workflows/slsa3_builder.yml@feat/assets
     with:
