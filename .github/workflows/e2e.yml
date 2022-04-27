@@ -9,10 +9,11 @@ permissions: read-all
 jobs:
   #TODO: support multiple config files.
   build:
+    runs-on: ubuntu-latest
     steps:
-      -run: |
-        echo hello
-        exit -1
+      - run: |
+          echo hello
+          exit -1
 
   run-if-failed:
     runs-on: ubuntu-latest
