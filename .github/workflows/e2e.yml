@@ -30,7 +30,7 @@ jobs:
           #TODO: create issue on the repo about the failure.
           
           cat << EOF > BODY
-          Repo: https://github.com/$GITHUB_REPOSITORY@$GITHUB_REF_NAME
+          Repo: https://github.com/$GITHUB_REPOSITORY/tree/$GITHUB_REF_NAME
           Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           Workflow name: Go push main
           Workflow file: https://github.com/${{ github.repository }}/tree/main/.github.com/workflows/e2e.yml
