@@ -20,7 +20,7 @@ jobs:
     if: always() && (needs.build.result == 'failure')
     steps:
       - run: |
-        #TODO: create issue on the repo about the failure.
-        echo "it failed"
-        exit 1
+          #TODO: create issue on the repo about the failure.
+          echo "it failed"
+          exit 1
   
