@@ -31,8 +31,9 @@ jobs:
           
           cat << EOF > BODY
           Repo: $GITHUB_REPOSITORY@$GITHUB_REF_NAME
+          Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           Workflow name: Go push main
-          Workflow file: [$GITHUB_REPOSITORY/.github.com/workflows/e2e.yml](https://github.com/$GITHUB_REPOSITORY/.github.com/workflows/e2e.yml)
+          Workflow file: https://github.com/${{ github.repository }}/tree/main/.github.com/workflows/e2e.yml
           Trigger: push
           Branch: main
           Private repo : false
