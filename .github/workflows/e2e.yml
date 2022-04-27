@@ -30,9 +30,9 @@ jobs:
           #TODO: create issue on the repo about the failure.
           
           cat << EOF > BODY
-          Repo: <repo name@branch>
+          Repo: $GITHUB_REPOSITORY@$GITHUB_REF_NAME
           Workflow name: Go push main
-          Workflow file: [$GITHUB_REPOSITORY/.github.com/workflows/e2e.yml]($GITHUB_REPOSITORY/.github.com/workflows/e2e.yml)
+          Workflow file: [$GITHUB_REPOSITORY/.github.com/workflows/e2e.yml](https://github.com/$GITHUB_REPOSITORY/.github.com/workflows/e2e.yml)
           Trigger: push
           Branch: main
           Private repo : false
