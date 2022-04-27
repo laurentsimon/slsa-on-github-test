@@ -1,0 +1,26 @@
+name: Go push main
+
+on: 
+  push:
+    branches: [ main ]
+
+permissions: read-all
+
+jobs:
+  #TODO: support multiple config files.
+  build:
+    steps:
+      -run: |
+        echo hello
+        exit -1
+
+  run-if-failed:
+    runs-on: ubuntu-latest
+    needs: build
+    if: always() && (needs.build.result == 'failure')
+    steps:
+      - run: |
+        #TODO: create issue on the repo about the failure.
+        echo "it failed"
+        exit 1
+  
