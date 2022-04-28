@@ -12,6 +12,6 @@ flags:
 #mod_timestamp: '{{ .CommitTimestamp }}'
 goos: linux
 goarch: amd64
-binary: binary-{{ .Os }}-{{ .Arch }}
+binary: binary-{{ .Os }}-{{ .Arch }}-config1
 #ldflags:
 #  - '{{ .Env.VERSION_LDFLAGS }}'
