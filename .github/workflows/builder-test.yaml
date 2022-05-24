@@ -15,7 +15,7 @@ jobs:
       id-token: write # For signing
       contents: write # For asset uploads. Always needed, even when not setting `upload-assets: false` :/
     #uses: slsa-framework/slsa-github-generator-go/.github/workflows/slsa3_builder.yml@main
-    uses: laurentsimon/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@v0.0.15
+    uses: laurentsimon/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@v0.0.17
     with:
       go-version: 1.17
       upload-assets: false
