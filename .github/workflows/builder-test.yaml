@@ -20,7 +20,7 @@ jobs:
       go-version: 1.17
       upload-assets: false
       config-file: ./.github/workflows/go-configs/config1.yml
-      compiler-builder: true
+      compile-builder: true
 
   upload:
     permissions:
