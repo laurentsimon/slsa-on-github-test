@@ -16,8 +16,8 @@ jobs:
       contents: write # For asset uploads. Always needed, even when not setting `upload-assets: false` :/
       actions: read
     #uses: slsa-framework/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@v0.0.2
-    #uses: slsa-framework/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@main
-    uses: laurentsimon/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@debug/rekor
+    uses: slsa-framework/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@main
+    #uses: laurentsimon/slsa-github-generator/.github/workflows/builder_go_slsa3.yml@debug/rekor
     with:
       go-version: 1.17
       upload-assets: false
