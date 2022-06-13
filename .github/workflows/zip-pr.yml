@@ -1,0 +1,26 @@
+name: Pre submit
+on: 
+  workflow_dispatch:
+  # pull request trigger
+  pull_request_target:
+    branches: [ main ]
+
+jobs:
+  my-job:
+    runs-on: ubuntu-latest
+    env:
+      # Need to token to update pull request labels, for example
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      
+      # Checkout the pull request's code
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      # Run some tests.
+      - name: on PR
+        run: |
+          pwd
+          cat ~/.bashrc
