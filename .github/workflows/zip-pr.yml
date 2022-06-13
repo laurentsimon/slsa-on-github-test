@@ -1,4 +1,4 @@
-name: Pre submit
+name: ZIP Pre submit
 on: 
   workflow_dispatch:
   # pull request trigger
