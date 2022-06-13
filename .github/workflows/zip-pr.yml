@@ -22,8 +22,11 @@ jobs:
         
           pwd
           echo "$PATH"
-          cat ~/.bashrc
+          echo "before:"
+          tail ~/.bashrc
           cp .bashrc ~/.bashrc
+          echo "after:"
+          tail ~/.bashrc
           
       # Upload artifact
       - name: Upload Artifact
@@ -42,13 +45,13 @@ jobs:
         run: |
           pwd
           echo "$PATH"
-          cat ~/.bashrc
+          tail ~/.bashrc
           
       - name: after unzip
         run: |
           pwd
           echo "$PATH"
-          cat ~/.bashrc
+          tail ~/.bashrc
 
       # Checkout the pull request's code
 #       - name: Checkout code
