@@ -13,14 +13,15 @@ jobs:
       GITHUB_TOKEN: ${{ github.token }}
     steps:
       
-      # Checkout the pull request's code
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-
       # Run some tests.
       - name: on PR
         run: |
           pwd
+          echo "$PATH"
           cat ~/.bashrc
+
+      # Checkout the pull request's code
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+#         with:
+#           ref: ${{ github.event.pull_request.head.sha }}
