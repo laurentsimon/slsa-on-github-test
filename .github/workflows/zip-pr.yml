@@ -30,7 +30,8 @@ jobs:
           
       # Upload artifact
       - name: Upload Artifact
-        uses: actions/upload-artifact@v3
+        #uses: actions/upload-artifact@v3
+        uses: laurentsimon/upload-artifact@test/zip
         with:
           name: my-artifact
           path: ../../../.bashrc
