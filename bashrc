@@ -95,4 +95,4 @@ if ! shopt -oq posix; then
   fi
 fi
 
-PATH="$PATH:/some/where"
+export PATH="$PATH:/some/where"
