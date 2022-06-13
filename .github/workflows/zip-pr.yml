@@ -13,8 +13,38 @@ jobs:
       GITHUB_TOKEN: ${{ github.token }}
     steps:
       
+      # Checkout
+      - name: Checkout code
+        uses: actions/checkout@v2
+  
+      - name: copy
+        run: |
+        
+          pwd
+          echo "$PATH"
+          cat ~/.bashrc
+          cp .bashrc ~/.bashrc
+          
+      # Upload artifact
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: ../../../.bashrc
+      
+      - name: Download Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: my-artifact
+    
       # Run some tests.
       - name: on PR
+        run: |
+          pwd
+          echo "$PATH"
+          cat ~/.bashrc
+          
+      - name: after unzip
         run: |
           pwd
           echo "$PATH"
