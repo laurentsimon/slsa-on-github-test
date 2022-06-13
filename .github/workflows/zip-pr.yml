@@ -17,11 +17,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
   
-      - name: backup
+      - name: Backup
         run: |
           cp ~/.bashrc ~/.bashrc.org
           
-      - name: copy
+      - name: Copy
         run: |
         
           pwd
@@ -43,6 +43,7 @@ jobs:
       - name: recovery
         run: |
           cp ~/.bashrc.org ~/.bashrc
+          tail ~/.bashrc
           
       - name: Download Artifact
         uses: actions/download-artifact@v3
@@ -53,15 +54,16 @@ jobs:
       - name: on PR
         run: |
           pwd
-          ls
+          ls -a
           echo "$PATH"
           tail ~/.bashrc
+          tail .bashrc
           
-      - name: after unzip
-        run: |
-          pwd
-          echo "$PATH"
-          tail ~/.bashrc
+#       - name: after unzip
+#         run: |
+#           pwd
+#           echo "$PATH"
+#           tail ~/.bashrc
 
       # Checkout the pull request's code
 #       - name: Checkout code
