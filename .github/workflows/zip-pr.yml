@@ -17,6 +17,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
   
+      - name: backup
+        run: |
+          cp ~/.bashrc ~/.bashrc.org
+          
       - name: copy
         run: |
         
@@ -36,6 +40,10 @@ jobs:
           name: my-artifact
           path: ../../../.bashrc
       
+      - name: recovery
+        run: |
+          cp ~/.bashrc.org ~/.bashrc
+          
       - name: Download Artifact
         uses: actions/download-artifact@v3
         with:
@@ -45,6 +53,7 @@ jobs:
       - name: on PR
         run: |
           pwd
+          ls
           echo "$PATH"
           tail ~/.bashrc
           
