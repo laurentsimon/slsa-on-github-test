@@ -1,4 +1,4 @@
-module laurentsimon/helloworld
+module github.com/laurentsimon/slsa-on-github-test/v0
 
 go 1.18
 
