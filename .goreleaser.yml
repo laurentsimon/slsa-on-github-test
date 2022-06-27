@@ -1,0 +1,36 @@
+project_name: test_project
+env:
+  - GO111MODULE=on
+  # https://stackoverflow.com/a/62821358/19407
+  - CGO_ENABLED=0
+gomod:
+  proxy: true
+builds:
+- id: linux
+  binary: scorecard-linux-{{ .Arch }}
+  no_unique_dist_dir: true
+  flags:
+      - -trimpath
+      - -tags=netgo
+  goos:
+    - linux
+  goarch:
+    - arm64
+    - 386
+    - arm
+  ldflags:
+    - -s {{.Env.VERSION_LDFLAGS}} 
+
+- id: darwin
+  binary: scorecard-darwin-{{ .Arch }}
+  no_unique_dist_dir: true
+  flags:
+      - -trimpath
+      - -tags=netgo
+  goos:
+    - darwin
+  goarch:
+    - amd64
+    - arm64
+  ldflags:
+    - -s {{.Env.VERSION_LDFLAGS}} 
