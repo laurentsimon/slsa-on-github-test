@@ -18,8 +18,8 @@ builds:
     - arm64
     - 386
     - arm
-  ldflags:
-    - -s {{.Env.VERSION_LDFLAGS}} 
+#   ldflags:
+#     - -s {{.Env.VERSION_LDFLAGS}} 
 
 - id: darwin
   binary: scorecard-darwin-{{ .Arch }}
@@ -32,5 +32,5 @@ builds:
   goarch:
     - amd64
     - arm64
-  ldflags:
-    - -s {{.Env.VERSION_LDFLAGS}} 
+#   ldflags:
+#     - -s {{.Env.VERSION_LDFLAGS}} 
