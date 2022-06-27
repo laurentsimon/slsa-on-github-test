@@ -35,8 +35,8 @@ jobs:
       
       - name: print
         env:
-          ARTIFACTS: ${{ steps.build.outputs.artifacts }}
-          METADATA: ${{ steps.build.outputs.metadata }}
+          ARTIFACTS: "${{ toJSON(steps.build.outputs.artifacts) }}"
+          METADATA: "${{ toJSON(steps.build.outputs.metadata) }}"
         run: |
-          echo "artifacts: ${{ toJSON(steps.build.outputs.artifacts) }}"
-          echo "metadata: ${{ toJSON(steps.build.outputs.metadata) }}"
+          echo "artifacts: $ARTIFACTS"
+          echo "metadata: $METADATA"
