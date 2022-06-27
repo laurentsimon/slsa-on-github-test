@@ -40,8 +40,9 @@ jobs:
           ARTIFACTS: "${{ steps.build.outputs.artifacts }}"
           METADATA: "${{ steps.build.outputs.metadata }}"
         run: |
-          echo "artifacts: $(echo $ARTIFACTS | base64 -w0)"
-          echo "metadata: $(echo $METADATA | base64 -w0)"
+          #echo "artifacts: $(echo $ARTIFACTS | base64 -w0)"
+          #echo "metadata: $(echo $METADATA | base64 -w0)"
           
           checksum_file=$(echo "$ARTIFACTS" | jq -r '.[] | select (.type=="Checksum") | .path')
-          cat $checksum_file
+          subjects=$(cat $checksum_file | base64 -w0)
+          echo "$subjects"
