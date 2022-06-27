@@ -1,4 +1,4 @@
-module github.com/laurentsimon/slsa-on-github-test/v0
+module github.com/laurentsimon/slsa-on-github-test
 
 go 1.18
 
