@@ -41,5 +41,5 @@ jobs:
           echo "artifacts: $(echo $ARTIFACTS | base64 -w0)"
           echo "metadata: $(echo $METADATA | base64 -w0)"
           
-          checksum_file=$(echo "$ARTIFACTS" | base64 -d | jq -r '.[] | select (.type=="Checksum") | .path')
+          checksum_file=$(echo "$ARTIFACTS" | jq -r '.[] | select (.type=="Checksum") | .path')
           cat $checksum_file
