@@ -34,6 +34,9 @@ jobs:
           args: release --rm-dist
       
       - name: print
+        env:
+          ARTIFACTS: ${{ steps.build.outputs.artifacts }}
+          METADATA: ${{ steps.build.outputs.metadata }}
         run: |
-          echo "artifacts: ${{ steps.build.outputs.artifacts }}"
-          echo "metadata: ${{ steps.build.outputs.metadata }}"
+          echo "artifacts: ${{ toJSON(steps.build.outputs.artifacts) }}"
+          echo "metadata: ${{ toJSON(steps.build.outputs.metadata) }}"
