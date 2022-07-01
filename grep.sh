@@ -1,4 +1,4 @@
-set -e
+#set -e
 
 # Verify that no internal Actions are using `actions/checkout`
 # See reasoning in ./github/actions/README.md
