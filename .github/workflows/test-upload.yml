@@ -1,0 +1,34 @@
+name: Test upload
+
+on:
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  upload1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: gerenate
+        run: |
+        
+          echo upload1 > file
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: upload1
+          path: ./file
+   
+  upload2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: gerenate
+        run: |
+        
+          echo upload2 > file
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: upload2
+          path: ./file
+        
