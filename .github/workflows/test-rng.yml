@@ -11,6 +11,7 @@ jobs:
       value: ${{ steps.rng.outputs.result }}
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: Generate random 16-byte value (32-char hex encoded)
         id: rng
         uses: ./.github/actions/rng
