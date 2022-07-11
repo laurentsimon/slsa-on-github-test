@@ -19,8 +19,7 @@ jobs:
       - name: Print
         run: |
         
-          echo "value: ${{ steps.rng.outputs.result }}"
-          echo "value: ${{ steps.rng.outputs.results }}"
+          echo "value: ${{ steps.rng.outputs.random }}"
    
   print-job:
     runs-on: ubuntu-latest
