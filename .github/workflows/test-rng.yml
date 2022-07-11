@@ -8,7 +8,7 @@ permissions: read-all
 jobs:
   rng:
     outputs:
-      value: ${{ steps.rng.outputs.result }}
+      value: ${{ steps.rng.outputs.random }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
