@@ -1,0 +1,33 @@
+name: Test rng
+
+on:
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  rng:
+    outputs:
+      value: ${{ steps.rng.outputs.result }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate random 16-byte value (32-char hex encoded)
+        id: rng
+        uses: slsa-framework/slsa-github-generator/.github/actions/rng@aa37b206ed0a2326ecad4023d24a07eaeca4520c
+  
+      - name: Print
+        run: |
+        
+          echo "value: ${{ steps.rng.outputs.result }}"
+          echo "value: ${{ steps.rng.outputs.results }}"
+   
+  print-job:
+    runs-on: ubuntu-latest
+    needs: rng
+    steps:
+      - name: Print
+        run: |
+        
+          echo "value: ${{ needs.rng.outputs.value }}"
+
+        
