@@ -1,4 +1,4 @@
-name: pre-submit actions
+name: test grep
 
 on:
   pull_request:
