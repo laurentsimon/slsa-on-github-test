@@ -1,4 +1,4 @@
-name: pre-submit actions
+name: submit actions
 
 on:
   pull_request:
