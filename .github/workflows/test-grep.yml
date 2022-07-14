@@ -7,7 +7,7 @@ on:
 
 jobs:
   checkout:
-    name: verify no checkout in Actions
+    name: verify grep
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
