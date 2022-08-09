@@ -1,8 +1,11 @@
 name: SLSA generic generator
 on:
   workflow_dispatch:
-  release:
-    types: [created]
+  push:
+    tags:
+      - "*"
+#   release:
+#     types: [created]
 
 permissions: read-all
 
