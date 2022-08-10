@@ -9,13 +9,13 @@ set -euo pipefail
 # we set -o pipefail option and grep returns 1 when there is no match
 
 this_file="e2e.generic.tag.main.annotated.slsa3.yml"
-echo "THIS_FILE: $this_file"
-echo "blo"
-which grep
-ls -l "$(which grep)"
-echo "done"
-#annotated_tags=$(echo "$this_file" | cut -d '.' -f5 | grep annotated)
-echo "hello"
+# echo "THIS_FILE: $this_file"
+# echo "blo"
+# which grep
+# ls -l "$(which grep)"
+# echo "done"
+# #annotated_tags=$(echo "$this_file" | cut -d '.' -f5 | grep annotated)
+# echo "hello"
 echo "hello"
 echo "$this_file" | grep "hello"
 echo "hi"
