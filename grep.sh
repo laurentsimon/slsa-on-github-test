@@ -8,7 +8,7 @@ set -euo pipefail
 # Note: splitting command in two to avoid using pipe because
 # we set -o pipefail option and grep returns 1 when there is no match
 
-this_file="e2e.generic.tag.main.annotated.slsa3.yml
+this_file="e2e.generic.tag.main.annotated.slsa3.yml"
 echo "THIS_FILE: $this_file"
 echo "blo"
 which grep
