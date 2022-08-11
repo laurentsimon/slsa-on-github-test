@@ -84,7 +84,8 @@ jobs:
           LINUX_DIGESTS: "${{ needs.build.outputs.digests-linux }}"
           MACOS_DIGESTS: "${{ needs.build.outputs.digests-macos }}"
         run: |
-      
+          set -euo pipefail
+
           linux_digests=$(echo "$LINUX_DIGESTS" | base64 -d)
           macos_digests=$(echo "$MACOS_DIGESTS" | base64 -d)
           echo "$linux_digests" "$macos_digests" | tee checksums.txt
