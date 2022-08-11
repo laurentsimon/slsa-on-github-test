@@ -11,7 +11,20 @@ jobs:
           # list dir
           dir
           # create file
-          echo enter your text here > filename.txt
+          echo enter your text here1 > filename1.txt
+          echo enter your text here2 > filename2.txt
+          echo enter your text here3 > filename3.txt
           # sha256sum it
           certUtil -hashfile filename.txt SHA256
+          # help
+          certutil -hashfile -?
+          # grep - 
+          # see https://stackoverflow.com/questions/52185375/windows-batch-file-format-certutil-output-and-filename-and-size-in-single-line
+          for %%f in (*) do (  
+           (
+             <nul set /p ".= %%~nxf " 
+             certutil -hashfile "%%f" SHA256 | find /V ":"
+           ) >>%OUTFILE%  
+          ) 
+          #certUtil -hashfile filename.txt SHA256 | findstr /r ".*\.sql"
           
