@@ -30,15 +30,19 @@ jobs:
           echo enter your text here1 > filename1.txt
           echo enter your text here2 > filename2.txt
           echo enter your text here3 > filename3.txt
+          
+          pwd
+          dir
         
       - name: shell
         shell: bash
         run: |
           pwd
           ls
-          tree
+          dir
           cd bin
           files=$(ls *.txt)
+          echo $files
           sha256sum $files
           
 #       - name: power shell
