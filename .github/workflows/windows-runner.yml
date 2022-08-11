@@ -23,7 +23,7 @@ jobs:
           FOR %%fn IN (folder_set) DO (
             (
              <nul set /p ".= %%~nxf,%%~zf Bytes," 
-             certutil -hashfile "%%f" SHA256 | find /V ":"
+             certutil -hashfile "%%fn" SHA256 | find /V ":"
            ) >>%OUTFILE%  
           )
           #for %f in (*) do (  
