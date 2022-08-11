@@ -22,7 +22,7 @@ jobs:
       - name: create files
         run: |
           # print working dir
-          cd
+          # cd
           # list dir
           dir
           # create file
@@ -34,8 +34,7 @@ jobs:
           pwd
           dir
         
-      - name: shell
-        #shell: bash
+      - name: List files
         run: |
           pwd
           ls
