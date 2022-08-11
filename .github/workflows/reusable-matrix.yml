@@ -40,8 +40,8 @@ jobs:
       - name: Build artifacts for ${{ matrix.os }}
         run: |
             # These are some amazing artifacts.
-            echo "artifact1" > artifact1-${{ matrix.os }}
-            echo "artifact2" > artifact2-${{ matrix.os }}
+            echo "artifact1 ${{ matrix.os }}" > artifact1-${{ matrix.os }}
+            echo "artifact2 ${{ matrix.os }}" > artifact2-${{ matrix.os }}
 
       # ========================================================
       #
