@@ -61,7 +61,6 @@ jobs:
           # List the artifacts the provenance will refer to.
           files=$(ls artifact*)
           # Generate the subjects (base64 encoded).
-          sha256sum $files
           echo "::set-output name=digests::$(sha256sum $files | base64 -w0)"
       - name: Generate SLSA subjects - ${{ runner.os }}
         id: hash-macos
@@ -78,11 +77,11 @@ jobs:
       - name: Generate SLSA subjects - ${{ runner.os }}
         id: hash-windows
         if: runner.os == 'Windows'
+        # Set-Variable -Name "desc" -Value "A description"
+        # files=(dir  | % { $_.basename }) -join ','
         run: |
-          set -euo pipefail
-
           # List the artifacts the provenance will refer to.
-          files=$(ls artifact*)
+          
           # Generate the subjects (base64 encoded).
           $hashes = Get-FileHash -Algorithm SHA256 .artifact1.txt,artifact2.txt | ForEach-Object {Write-Output "$($_.Hash) $($_.Path)"}
           $base64 = [System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($hashes))
