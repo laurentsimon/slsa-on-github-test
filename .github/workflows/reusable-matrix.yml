@@ -83,7 +83,7 @@ jobs:
           # List the artifacts the provenance will refer to.
           
           # Generate the subjects (base64 encoded).
-          $hashes = Get-FileHash -Algorithm SHA256 * | ForEach-Object {Write-Output "$($_.Hash) $($_.Path)"}
+          $hashes = Get-FileHash -Algorithm SHA256 artifact* | ForEach-Object {Write-Output "$($_.Hash) $($_.Path)"}
           $base64 = [System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($hashes))
           echo "::set-output name=digests::$base64"
 
