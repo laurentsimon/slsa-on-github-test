@@ -30,14 +30,19 @@ jobs:
           echo enter your text here1 > filename1.txt
           echo enter your text here2 > filename2.txt
           echo enter your text here3 > filename3.txt
-          
-          
-      - name: power shell
-        working-directory: bin
-        shell: pwsh
+        
+      - name: shell
+        shell: bash
         run: |
-          Get-ChildItem | Get-FileHash -Algorithm SHA256
-          for ($i=0; $i -lt $h.Length; $i++) { 
-            Write-Output [PSCustomObject]@{Path=$h[$i].Path; SHA256=$h[$i].Hash} 
-          }
+        
+          sha256sum filename*.txt
+          
+#       - name: power shell
+#         working-directory: bin
+#         shell: pwsh
+#         run: |
+#           Get-ChildItem | Get-FileHash -Algorithm SHA256
+#           for ($i=0; $i -lt $h.Length; $i++) { 
+#             Write-Output [PSCustomObject]@{Path=$h[$i].Path; SHA256=$h[$i].Hash} 
+#           }
           
