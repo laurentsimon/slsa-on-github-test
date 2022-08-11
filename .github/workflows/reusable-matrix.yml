@@ -89,15 +89,16 @@ jobs:
           linux_digests=$(echo "$LINUX_DIGESTS" | base64 -d)
           macos_digests=$(echo "$MACOS_DIGESTS" | base64 -d)
           echo "$linux_digests" "$macos_digests" | tee checksums.txt
+          cat checksums.txt
           echo "::set-output name=digests::$(cat checksums.txt | base64 -w0)"
       
-  provenance:
-    needs: [build, merge]
-    permissions:
-      actions: read   # To read the workflow path.
-      id-token: write # To sign the provenance.
-      contents: write # To add assets to a release.
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.0
-    with:
-      base64-subjects: "${{ needs.merge.outputs.digests }}"
-      upload-assets: true # Optional: Upload to a new release
+#   provenance:
+#     needs: [build, merge]
+#     permissions:
+#       actions: read   # To read the workflow path.
+#       id-token: write # To sign the provenance.
+#       contents: write # To add assets to a release.
+#     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.0
+#     with:
+#       base64-subjects: "${{ needs.merge.outputs.digests }}"
+#       upload-assets: true # Optional: Upload to a new release
