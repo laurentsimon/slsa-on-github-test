@@ -89,7 +89,7 @@ jobs:
           linux_digests=$(echo "$LINUX_DIGESTS" | base64 -d)
           macos_digests=$(echo "$MACOS_DIGESTS" | base64 -d)
           echo "$linux_digests" "$macos_digests" | tee checksums.txt
-          echo "::set-output name=digests::$(cat $checksums.txt | base64 -w0)"
+          echo "::set-output name=digests::$(cat checksums.txt | base64 -w0)"
       
   provenance:
     needs: [build, merge]
