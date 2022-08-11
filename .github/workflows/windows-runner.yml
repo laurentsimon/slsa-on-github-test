@@ -22,7 +22,7 @@ jobs:
           # see https://stackoverflow.com/questions/52185375/windows-batch-file-format-certutil-output-and-filename-and-size-in-single-line
           for %%f in (*) do (  
            (
-             <nul set /p ".= %%~nxf " 
+             <nul set /p ".= %%~nxf,%%~zf Bytes," 
              certutil -hashfile "%%f" SHA256 | find /V ":"
            ) >>%OUTFILE%  
           ) 
