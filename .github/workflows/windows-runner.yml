@@ -4,6 +4,7 @@ jobs:
   my-job:
     runs-on: windows-latest
     steps:
+      #certUtil -hashfile filename.txt SHA256 | findstr /r ".*\.sql"
       - name: my-step
         run: |
           # print working dir
@@ -25,5 +26,5 @@ jobs:
           for /r %i in (*) do echo %i
           # grep - 
           # see https://stackoverflow.com/questions/52185375/windows-batch-file-format-certutil-output-and-filename-and-size-in-single-line
-          #certUtil -hashfile filename.txt SHA256 | findstr /r ".*\.sql"
+          
           
