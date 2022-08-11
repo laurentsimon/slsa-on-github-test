@@ -6,13 +6,15 @@ jobs:
     steps:
       #certUtil -hashfile filename.txt SHA256 | findstr /r ".*\.sql"
       #$(CertUtil -hashfile filename1.txt SHA256)[1] -replace " ",""
-      - name: my-step
+      
+      - name: crate files
         run: |
           # print working dir
           cd
           # list dir
           dir
           # create file
+          mkdir bin && cd bin
           echo enter your text here1 > filename1.txt
           echo enter your text here2 > filename2.txt
           echo enter your text here3 > filename3.txt
@@ -24,8 +26,17 @@ jobs:
           echo help
           certutil -hashfile -?
           echo "DEBUG: list"
-          for (%i) in (*) do echo %i
+          
+          #for (%i) in (*) do echo %i
           # grep - 
           # see https://stackoverflow.com/questions/52185375/windows-batch-file-format-certutil-output-and-filename-and-size-in-single-line
           
+      - name: power shell
+        working-directory: bin
+        shell: pwsh
+        run: |
+          Get-ChildItem | Get-FileHash -Algorithm SHA256
+          for ($i=0; $i -lt $h.Length; $i++) { 
+            Write-Output [PSCustomObject]@{Path=$h[$i].Path; SHA256=$h[$i].Hash} 
+          }
           
