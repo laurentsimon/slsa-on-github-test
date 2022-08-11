@@ -42,7 +42,7 @@ jobs:
           cd bin
           files=$(ls *.txt)
           echo $files
-          sha256sum $files
+          sha256sum $files | base64 -w0
           
 #       - name: power shell
 #         working-directory: bin
