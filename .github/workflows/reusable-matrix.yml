@@ -77,15 +77,19 @@ jobs:
       - name: Generate SLSA subjects - ${{ runner.os }}
         id: hash-windows
         if: runner.os == 'Windows'
+        shell: bash
         # Set-Variable -Name "desc" -Value "A description"
         # files=(dir  | % { $_.basename }) -join ','
         run: |
           # List the artifacts the provenance will refer to.
+          files=$(ls artifact*)
+          # Generate the subjects (base64 encoded).
+          echo "::set-output name=digests::$(sha256sum $files | base64 -w0)"
           
           # Generate the subjects (base64 encoded).
-          $hashes = Get-FileHash -Algorithm SHA256 artifact* | ForEach-Object {Write-Output "$($_.Hash) $($_.Path)"}
-          $base64 = [System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($hashes))
-          echo "::set-output name=digests::$base64"
+          #$hashes = Get-FileHash -Algorithm SHA256 artifact* | ForEach-Object {Write-Output "$($_.Hash) $($_.Path)"}
+          #$base64 = [System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($hashes))
+          #echo "::set-output name=digests::$base64"
 
   merge:
     needs: [build]
