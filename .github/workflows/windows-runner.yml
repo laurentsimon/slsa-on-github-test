@@ -25,17 +25,5 @@ jobs:
           for /r %i in (*) do echo %i
           # grep - 
           # see https://stackoverflow.com/questions/52185375/windows-batch-file-format-certutil-output-and-filename-and-size-in-single-line
-          #FOR %%fn IN (folder_set) DO (
-          #  (
-          #   <nul set /p ".= %%~nxf,%%~zf Bytes," 
-          #   certutil -hashfile "%%fn" SHA256 | find /V ":"
-          # ) >>%OUTFILE%  
-          #)
-          #for %f in (*) do (  
-          # (
-          #   <nul set /p ".= %%~nxf,%%~zf Bytes," 
-          #   certutil -hashfile "%%f" SHA256 | find /V ":"
-          # ) >>%OUTFILE%  
-          #) 
           #certUtil -hashfile filename.txt SHA256 | findstr /r ".*\.sql"
           
