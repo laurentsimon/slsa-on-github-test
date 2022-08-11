@@ -21,8 +21,8 @@ permissions: read-all
 jobs:
   build:
     outputs:
-      digests: ${{ steps.hash.outputs.digests }}
-      runner-os: ${{ runner.os }}
+      digests-linux: ${{ steps.hash-linux.outputs.digests }}
+      digests-macos: ${{ steps.hash-macos.outputs.digests }}
     strategy:
       matrix:
         # windows-latest
@@ -51,8 +51,19 @@ jobs:
       #         provenance for.
       #
       # ========================================================
-      - name: Generate SLSA subjects
-        id: hash
+      - name: Generate SLSA subjects - ${{ runner.os }}
+        id: hash-linux
+        if: runner.os == 'Linux'
+        run: |
+          set -euo pipefail
+
+          # List the artifacts the provenance will refer to.
+          files=$(ls artifact*)
+          # Generate the subjects (base64 encoded).
+          echo "::set-output name=digests::$(sha256sum $files | base64 -w0)"
+      - name: Generate SLSA subjects - ${{ runner.os }}
+        id: hash-macos
+        if: runner.os == 'macOS'
         run: |
           set -euo pipefail
 
@@ -61,14 +72,32 @@ jobs:
           # Generate the subjects (base64 encoded).
           echo "::set-output name=digests::$(sha256sum $files | base64 -w0)"
 
-  provenance:
+  merge:
     needs: [build]
+    outputs:
+      digests: ${{ steps.hash.outputs.digests }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: merge results
+        id: hash
+        env:
+          LINUX_DIGESTS: "${{ needs.build.outputs.digests-linux }}"
+          MACOS_DIGESTS: "${{ needs.build.outputs.digests-macos }}"
+        run: |
+      
+          linux_digests=$(echo "$LINUX_DIGESTS" | base64 -d)
+          macos_digests=$(echo "$MACOS_DIGESTS" | base64 -d)
+          echo "$linux_digests" "$macos_digests" | tee checksums.txt
+          echo "::set-output name=digests::$(cat $checksums.txt | base64 -w0)"
+      
+  provenance:
+    needs: [build, merge]
     permissions:
       actions: read   # To read the workflow path.
       id-token: write # To sign the provenance.
       contents: write # To add assets to a release.
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.0
     with:
-      base64-subjects: "${{ needs.build.outputs.digests }}"
+      base64-subjects: "${{ needs.merge.outputs.digests }}"
       attestation-name: attestation-${{needs.build.outputs.runner-os }}.intoto.jsonl
       upload-assets: true # Optional: Upload to a new release
