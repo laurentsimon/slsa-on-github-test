@@ -49,7 +49,8 @@ jobs:
       #         provenance for.
       #
       # ========================================================
-      - name: Generate subject
+      - name: Generate SLSA subjects
+        if: runner.os != 'Windows'
         id: hash
         run: |
           set -euo pipefail
@@ -60,6 +61,7 @@ jobs:
           echo "::set-output name=digests::$(sha256sum $files | base64 -w0)"
 
   provenance:
+    if: runner.os != 'Windows'
     needs: [build]
     permissions:
       actions: read   # To read the workflow path.
