@@ -24,7 +24,8 @@ jobs:
       digests: ${{ steps.hash.outputs.digests }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-11]
+        # windows-latest
+        os: [ubuntu-latest, macOS-11]
     runs-on: ${{ matrix.os }}
     
     steps:
@@ -50,7 +51,6 @@ jobs:
       #
       # ========================================================
       - name: Generate SLSA subjects
-        if: runner.os != 'Windows'
         id: hash
         run: |
           set -euo pipefail
@@ -61,7 +61,6 @@ jobs:
           echo "::set-output name=digests::$(sha256sum $files | base64 -w0)"
 
   provenance:
-    if: runner.os != 'Windows'
     needs: [build]
     permissions:
       actions: read   # To read the workflow path.
