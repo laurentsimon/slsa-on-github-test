@@ -24,7 +24,7 @@ jobs:
           echo help
           certutil -hashfile -?
           echo "DEBUG: list"
-          for /r %i in (*) do echo %i
+          for (%i) in (*) do echo %i
           # grep - 
           # see https://stackoverflow.com/questions/52185375/windows-batch-file-format-certutil-output-and-filename-and-size-in-single-line
           
