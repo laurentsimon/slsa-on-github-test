@@ -23,10 +23,10 @@ jobs:
     outputs:
       digests-linux: ${{ steps.hash-linux.outputs.digests }}
       digests-macos: ${{ steps.hash-macos.outputs.digests }}
+      digests-windows: ${{ steps.hash-windows.outputs.digests }}
     strategy:
       matrix:
-        # windows-latest
-        os: [ubuntu-latest, macOS-11]
+        os: [ubuntu-latest, macOS-11, windows-latest]
     runs-on: ${{ matrix.os }}
     
     steps:
@@ -42,6 +42,7 @@ jobs:
             # These are some amazing artifacts.
             echo "artifact1 ${{ matrix.os }}" > artifact1-${{ matrix.os }}
             echo "artifact2 ${{ matrix.os }}" > artifact2-${{ matrix.os }}
+            echo "artifact3 ${{ matrix.os }}" > artifact3-${{ matrix.os }}
 
       # ========================================================
       #
@@ -73,6 +74,19 @@ jobs:
           # Generate the subjects (base64 encoded).
           shasum -a 256 $files
           echo "::set-output name=digests::$(shasum -a 256 $files | base64)"
+          
+      - name: Generate SLSA subjects - ${{ runner.os }}
+        id: hash-windows
+        if: runner.os == 'Windows'
+        run: |
+          set -euo pipefail
+
+          # List the artifacts the provenance will refer to.
+          files=$(ls artifact*)
+          # Generate the subjects (base64 encoded).
+          $hashes = Get-FileHash -Algorithm SHA256 .artifact1.txt,artifact2.txt | ForEach-Object {Write-Output "$($_.Hash) $($_.Path)"}
+          $base64 = [System.Convert]::ToBase64String([System.Text.Encoding]::Unicode.GetBytes($hashes))
+
 
   merge:
     needs: [build]
@@ -85,17 +99,22 @@ jobs:
         env:
           LINUX_DIGESTS: "${{ needs.build.outputs.digests-linux }}"
           MACOS_DIGESTS: "${{ needs.build.outputs.digests-macos }}"
+          WINDOWS_DIGESTS: "${{ needs.build.outputs.digests-windows }}"
         run: |
           set -euo pipefail
 
           linux_digests=$(echo "$LINUX_DIGESTS" | base64 -d)
           macos_digests=$(echo "$MACOS_DIGESTS" | base64 -d)
+          windows_digests=$(echo "$WINDOWS_DIGESTS" | base64 -d)
           echo "LINUX:"
           echo "$linux_digests" 
           echo "MACOS:"
           echo "$macos_digests"
+          echo "WINDOWS:"
+          echo "$windows_digests"
           echo "$linux_digests" > checksums.txt
           echo "$macos_digests" >> checksums.txt
+          echo "$windows_digests" >> checksums.txt
           echo "CHECKSUM:"
           cat checksums.txt
           echo "::set-output name=digests::$(cat checksums.txt | base64 -w0)"
