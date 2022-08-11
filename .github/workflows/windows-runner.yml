@@ -15,17 +15,18 @@ jobs:
           echo enter your text here2 > filename2.txt
           echo enter your text here3 > filename3.txt
           # sha256sum it
-          certUtil -hashfile filename.txt SHA256
+          certUtil -hashfile filename1.txt SHA256
+          $(CertUtil -hashfile filename1.txt SHA256)[1] -replace " ",""
           # help
           certutil -hashfile -?
           # grep - 
           # see https://stackoverflow.com/questions/52185375/windows-batch-file-format-certutil-output-and-filename-and-size-in-single-line
-          FOR %%fn IN (folder_set) DO (
-            (
-             <nul set /p ".= %%~nxf,%%~zf Bytes," 
-             certutil -hashfile "%%fn" SHA256 | find /V ":"
-           ) >>%OUTFILE%  
-          )
+          #FOR %%fn IN (folder_set) DO (
+          #  (
+          #   <nul set /p ".= %%~nxf,%%~zf Bytes," 
+          #   certutil -hashfile "%%fn" SHA256 | find /V ":"
+          # ) >>%OUTFILE%  
+          #)
           #for %f in (*) do (  
           # (
           #   <nul set /p ".= %%~nxf,%%~zf Bytes," 
