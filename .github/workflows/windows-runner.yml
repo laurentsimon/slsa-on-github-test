@@ -1,0 +1,17 @@
+name: Hello winndows runer
+on: workflow_dispatch
+jobs:
+  my-job:
+    runs-on: windows-latest
+    steps:
+      - name: my-step
+        run: |
+          # print working dir
+          cd
+          # list dir
+          dir
+          # create file
+          echo enter your text here > filename.txt
+          # sha256sum it
+          certUtil -hashfile filename.txt SHA256
+          
