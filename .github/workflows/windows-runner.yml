@@ -33,7 +33,11 @@ jobs:
         
       - name: shell
         shell: bash
+        working-directory: bin
         run: |
+          pwd
+          ls
+          tree
           files=$(ls *.txt)
           sha256sum $files
           
