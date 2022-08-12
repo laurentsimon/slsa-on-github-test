@@ -1,0 +1,41 @@
+
+name: Release Assets
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: new release version
+        required: true
+        default: (for example, 0.1.0)
+
+jobs:
+  release:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: GitHub release
+        uses: actions/create-release@v1.1.4
+        id: create-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.event.inputs.release_version }}-cli
+          release_name: jib-cli v${{ github.event.inputs.release_version }}
+          body: |
+            ### Major Changes
+            Just a test
+
+      - name: Create a file
+        run: |
+          echo hello > file.txt
+
+      - name: Upload
+        uses: ./.github/actions/upload-assets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: file.txt
+          asset_name: file.txt
+          asset_content_type: text/plain
+
