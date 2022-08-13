@@ -13,14 +13,15 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
       - name: GitHub release
         uses: actions/create-release@v1.1.4
         id: create-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ github.event.inputs.release_version }}-cli
-          release_name: jib-cli v${{ github.event.inputs.release_version }}
+          tag_name: ${{ github.event.inputs.release_version }}
+          release_name: ${{ github.event.inputs.release_version }}
           body: |
             ### Major Changes
             Just a test
