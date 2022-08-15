@@ -1,6 +1,19 @@
 name: SLSA generic generator
 on:
   workflow_dispatch:
+    inputs:
+      release_version:
+        description: new release version
+        required: true
+        default: (for example, 0.1.0)
+      some_bool:
+        description: other
+        required: false
+        default: true
+      some_integer:
+        description: other
+        required: false
+        default: "123"
   push:
     tags:
       - "*"
