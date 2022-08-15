@@ -7,11 +7,11 @@ on:
         required: true
         default: (for example, 0.1.0)
       some_bool:
-        description: other
+        description: some_bool
         required: false
         default: true
       some_integer:
-        description: other
+        description: some_integer
         required: false
         default: "123"
   push:
