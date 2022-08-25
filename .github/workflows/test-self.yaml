@@ -10,4 +10,4 @@ jobs:
     name: test self
     runs-on: ubuntu-latest
     steps:
-      - uses: laurentsimon/hello-github-actions@v1.0.0
+      - uses: laurentsimon/hello-github-actions/action-a@v1.0.0
