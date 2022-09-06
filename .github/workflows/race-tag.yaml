@@ -11,7 +11,7 @@ jobs:
     steps:
       - name: Sleep
         run: |
-          sleep 10s
+          sleep 20s
       - name: Checkout the repository
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
         with:
