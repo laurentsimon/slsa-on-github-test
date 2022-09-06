@@ -6,7 +6,7 @@ on:
       - "*"
       
 jobs:
-  args:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
