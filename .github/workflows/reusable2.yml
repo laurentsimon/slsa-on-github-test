@@ -7,7 +7,7 @@ permissions: read-all
 jobs:
   args:
     permissions:
-      token-id: write
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: oidc
