@@ -21,4 +21,5 @@ jobs:
   call2:
     permissions:
       id-token: write
+      contents: read
     uses: laurentsimon/slsa-on-github-test/.github/workflows/reusable2.yml@main
