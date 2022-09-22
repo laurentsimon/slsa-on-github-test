@@ -2,7 +2,8 @@ name: Reusable 1
 on:
   workflow_call:
   
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
   args:
