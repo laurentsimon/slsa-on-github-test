@@ -1,0 +1,18 @@
+name: Reusable 2
+on:
+  workflow_call:
+  
+permissions: read-all
+
+jobs:
+  args:
+    permissions:
+      token-id: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: oidc
+        run: |
+        
+          JWT=$(curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=testaudience")
+          echo "JWT reusable 2:"
+          echo "$JWT"
