@@ -1,0 +1,13 @@
+name: Resuable caller 1
+
+on: 
+  workflow_dispatch:
+  
+permissions: read-all
+
+jobs:
+  caller:
+      permissions:
+      id-token: write
+    uses: laurentsimon/slsa-on-github-test/.github/workflows/reusable1.yml@main
+   
