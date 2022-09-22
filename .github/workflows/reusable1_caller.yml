@@ -7,7 +7,7 @@ permissions: read-all
 
 jobs:
   caller:
-      permissions:
+    permissions:
       id-token: write
     uses: laurentsimon/slsa-on-github-test/.github/workflows/reusable1.yml@main
    
