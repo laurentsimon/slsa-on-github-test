@@ -15,7 +15,7 @@ jobs:
         run: |
         
           jwt=$(curl -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=testaudience")
-          value=$(echo "$jwt" | base64 -w0)
+          value=$(echo "$jwt" | jq -r '.value' | cut -f2 -d '.' | base64 -d | jq)
           echo "JWT reusable 1:"
           echo "$value"
 
