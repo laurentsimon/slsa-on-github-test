@@ -1,4 +1,4 @@
-name: submit actions
+name: uses env
 
 on:
   workflow_dispatch:
