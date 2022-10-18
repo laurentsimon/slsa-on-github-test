@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  BUILDER_SOURCE_DIR: .__builder_source__
+  BUILDER_SOURCE_DIR: __BUILDER_SOURCE_DIR__
   
 jobs:
   checkout:
@@ -13,8 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
         with:
-          path: "${{ env.BUILDER_CHECKOUT_DIR }}"
+          path: __BUILDER_SOURCE_DIR__
       - run: |
           set -euo pipefail
           ls ${{ env.BUILDER_CHECKOUT_DIR }}
-      - uses: ./$BUILDER_CHECKOUT_DIR/.github/actions/rng
+      - uses: ./__BUILDER_SOURCE_DIR__/.github/actions/rng
