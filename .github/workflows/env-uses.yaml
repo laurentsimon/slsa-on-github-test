@@ -1,0 +1,20 @@
+name: submit actions
+
+on:
+  workflow_dispatch:
+
+env:
+  BUILDER_SOURCE_DIR: .__builder_source__
+  
+jobs:
+  checkout:
+    name: checkout
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
+        with:
+          path: "${{ env.BUILDER_CHECKOUT_DIR }}"
+      - run: |
+          set -euo pipefail
+          ls ${{ env.BUILDER_CHECKOUT_DIR }}
+      - uses: ${{ env.BUILDER_CHECKOUT_DIR }}/.github/actions/rng
