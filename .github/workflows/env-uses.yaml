@@ -17,4 +17,4 @@ jobs:
       - run: |
           set -euo pipefail
           ls ${{ env.BUILDER_CHECKOUT_DIR }}
-      - uses: ${{ env.BUILDER_CHECKOUT_DIR }}/.github/actions/rng
+      - uses: ./${{ env.BUILDER_CHECKOUT_DIR }}/.github/actions/rng
