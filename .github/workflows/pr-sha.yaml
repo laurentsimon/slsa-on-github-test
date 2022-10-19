@@ -9,6 +9,14 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout the repository
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
+        with:
+          fetch-depth: 1
+          # Different from default actions/checkout which defaults to `true`.
+          persist-credentials: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+        
       - name: Test
         env:
           CONTEXT: "${{ toJSON(github) }}"
