@@ -39,7 +39,7 @@ jobs:
         run: echo "tag is $RELEASE_TAG"
         
       - name: exit early
-        if: inputs.run-release == 'false'
+        if: inputs.run-release == false
         run: echo "Do not run the release" && exit 1
    
   generic-generator:
