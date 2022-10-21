@@ -1,0 +1,17 @@
+name: verifier action
+
+on:
+  workflow_dispatch:
+
+env:
+  BUILDER_SOURCE_DIR: __BUILDER_SOURCE_DIR__
+  
+jobs:
+  checkout:
+    name: checkout
+    runs-on: ubuntu-latest
+    steps:
+      - uses: slsa-framework/slsa-verifier/actions/installer@v1.3.1
+      - run: |
+          set -euo pipefail
+          slsa-verifier
