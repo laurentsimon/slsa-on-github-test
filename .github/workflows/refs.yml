@@ -8,6 +8,11 @@ on:
         description: 'Release tag to test'
         required: true 
         type: string
+      run-release:
+          description: 'Whether to run the release code or not'
+          required: false 
+          type: boolean
+          default: false
   push:
     tags:
       - "*" # triggers only if push new tag version, like `0.8.4` or else
@@ -32,4 +37,13 @@ jobs:
           RELEASE_TAG: "${{ github.ref_name }}"
         if: github.ref_type == 'tag'
         run: echo "tag is $RELEASE_TAG"
-    
+        
+      - name: exit early
+        if: inputs.run-release == 'false'
+        run: echo "Do not run the release" && exit 1
+   
+  generic-generator:
+    needs: [pre-release-refs]
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo hello world
