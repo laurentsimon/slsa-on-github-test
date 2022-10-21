@@ -7,11 +7,20 @@ env:
   BUILDER_SOURCE_DIR: __BUILDER_SOURCE_DIR__
   
 jobs:
-  checkout:
-    name: checkout
+  tag:
+    name: tag
     runs-on: ubuntu-latest
     steps:
-      - uses: slsa-framework/slsa-verifier/actions/installer@v1.3.1
+      - uses: slsa-framework/slsa-verifier/actions/installer@v1.4.1
       - run: |
           set -euo pipefail
           slsa-verifier
+  hash:
+    name: hash
+    runs-on: ubuntu-latest
+    steps:
+      - uses: slsa-framework/slsa-verifier/actions/installer@e6428d7da594455a4c2b7f24907fec421a5e0e95 # tag=v1.4.1
+      - run: |
+          set -euo pipefail
+          slsa-verifier
+
