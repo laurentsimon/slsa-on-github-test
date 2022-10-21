@@ -1,4 +1,4 @@
-name: Builders realeaser
+name: refs
 
 on:
   # For manual tests.
