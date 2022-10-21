@@ -2,9 +2,6 @@ name: verifier action
 
 on:
   workflow_dispatch:
-
-env:
-  BUILDER_SOURCE_DIR: __BUILDER_SOURCE_DIR__
   
 jobs:
   tag:
