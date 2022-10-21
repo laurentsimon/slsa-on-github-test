@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       release-tag:
-        description: 'Realse tag to test'
+        description: 'Release tag to test'
         required: true 
         type: string
   push:
@@ -23,13 +23,11 @@ jobs:
       - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
       - name: manual release ref
         env:
-          RELEASE_TAG: ${{ inputs.release-tag }}
+          GITHUB_REF_NAME: ${{ inputs.release-tag }}
         if: github.ref_type != 'tag'
-        run: echo "tag is $RELEASE_TAG"
+        run: echo "tag is $GITHUB_REF_NAME"
 
       - name: new tag release ref
-        env:
-          RELEASE_TAG: ${{ env.GITHUB_REF_NAME }}
         if: github.ref_type == 'tag'
-        run: echo "tag is $RELEASE_TAG"
+        run: echo "tag is $GITHUB_REF_NAME"
     
