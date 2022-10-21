@@ -29,7 +29,7 @@ jobs:
 
       - name: new tag release ref
         env:
-          RELEASE_TAG: "$github.ref_name"
+          RELEASE_TAG: "${{ github.ref_name }}"
         if: github.ref_type == 'tag'
         run: echo "tag is $RELEASE_TAG"
     
