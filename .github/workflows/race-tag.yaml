@@ -1,9 +1,10 @@
 name: race tag
 on:
-  workflow_dispatch:
-  push:
-    tags:
-      - "*"
+    pull_request:
+#   workflow_dispatch:
+#   push:
+#     tags:
+#       - "*"
       
 jobs:
   build:
@@ -16,6 +17,20 @@ jobs:
         uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579
         with:
           fetch-depth: 0
-      - id: print
-        run: |
-          cat race.txt
+          ref: ${{github.event.pull_request.head.ref}}
+      - run: |
+          
+          git_sha=$(git log -1 --format='%H')
+          echo "github_sha: $GITHUB_SHA"
+          echo "git_sha: $git_sha"
+          
+          if [[ "$git_sha" != "$GITHUB_SHA" ]]; then
+              echo "bad"
+              exit 1
+          fi
+
+          echo "ok"
+
+#       - id: print
+#         run: |
+#           cat race.txt
