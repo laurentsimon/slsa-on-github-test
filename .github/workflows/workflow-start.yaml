@@ -1,0 +1,19 @@
+name: workflow start
+
+on:
+  pull_request:
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Save event name
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          mkdir -p ./event
+          echo $EVENT_NAME > ./event/event_name
+      - uses: actions/upload-artifact@v3
+        with:
+          name: event
+          path: event/
