@@ -2,7 +2,6 @@
 
 cat <<EOF >DATA
 
-jobs:
   provenance:
     permissions:
       id-token: write # For signing.
