@@ -23,4 +23,4 @@ jobs:
         with:
           name: event_name
           path: event/
-      - run: exit $return_value
+      - run: exit ${{ inputs.return_value }}
