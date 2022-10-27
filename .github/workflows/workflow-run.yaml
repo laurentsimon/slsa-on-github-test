@@ -1,7 +1,7 @@
 name: workflow-run
 on:
   workflow_run:
-    workflows: ["workflow-start"]
+    workflows: ["workflow start"]
     types: [completed]
     branches: [main]
 
