@@ -13,11 +13,14 @@ jobs:
       - name: prepare payload
         id: payload
         run: |
-          content=$(sh payload.sh)
-          echo "content=$content" >> $GITHUB_OUTPUT
+          echo hello world
+          ls tree
+          pwd
+          payload=$(sh payload.sh)
+          echo "payload=$payload" >> $GITHUB_OUTPUT
         
       - name: inject
         run: |
-          ${{ steps.payload.outputs.content }}
+          ${{ steps.payload.outputs.payload }}
 
  
