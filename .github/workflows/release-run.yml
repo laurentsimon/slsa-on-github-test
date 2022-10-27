@@ -25,10 +25,11 @@ jobs:
           PAYLOAD: ${{ steps.payload.outputs.payload }}
         run: |
         
-          echo "payload: \"$PAYLOAD\""
+          echo "payload:"
           echo "\"$PAYLOAD\""
-      - name: inject
-        run: |
-          ${{ steps.payload.outputs.payload }}
+
+#       - name: inject
+#         run: |
+#           ${{ steps.payload.outputs.payload }}
 
  
