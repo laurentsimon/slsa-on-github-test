@@ -2,6 +2,7 @@ name: workflow start
 
 on:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   upload:
