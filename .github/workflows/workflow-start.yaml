@@ -18,4 +18,4 @@ jobs:
         with:
           name: event_name
           path: event/
-      - run: exit 1
+      - run: exit 0
