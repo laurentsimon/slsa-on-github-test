@@ -3,7 +3,6 @@ on:
   workflow_run:
     workflows: ["workflow start"]
     types: [completed]
-    branches: [main]
 
 permissions: read-all
 
