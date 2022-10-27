@@ -1,7 +1,6 @@
 name: release injection
 
 on:
-  # For manual tests.
   workflow_dispatch:
     
 permissions: read-all
