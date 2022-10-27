@@ -9,6 +9,8 @@ permissions: read-all
 env:
   GH_TOKEN: ${{ secrets.CREATE_ISSUES }}
   ISSUE_REPOSITORY: ${{ github.repository }}
+  TITLE: 'schedule cli'
+  WORKFLOW: 'cli'
 
 jobs:
   if-failed:
