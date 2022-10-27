@@ -14,7 +14,8 @@ jobs:
         id: payload
         run: |
           echo hello world
-          ls tree
+          ls
+          tree
           pwd
           payload=$(sh payload.sh)
           echo "payload=$payload" >> $GITHUB_OUTPUT
