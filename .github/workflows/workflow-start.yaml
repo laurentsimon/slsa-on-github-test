@@ -3,6 +3,11 @@ name: workflow start
 on:
   pull_request:
   workflow_dispatch:
+    inputs:
+      return_value:
+        default: "0"
+        required: false
+        type: string
 
 jobs:
   upload:
@@ -18,4 +23,4 @@ jobs:
         with:
           name: event_name
           path: event/
-      - run: exit 0
+      - run: exit $return_value
