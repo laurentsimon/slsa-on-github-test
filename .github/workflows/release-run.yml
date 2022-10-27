@@ -11,22 +11,21 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: prepare payload
-        id: payload
         run: |
           echo hello world
           ls
           tree
           pwd
-          payload=$(sh payload.sh)
-          echo "payload=$payload" >> $GITHUB_OUTPUT
+          sh payload.sh
+          $payload
       
-      - name: print
-        env:
-          PAYLOAD: ${{ steps.payload.outputs.payload }}
-        run: |
+#       - name: print
+#         env:
+#           PAYLOAD: ${{ steps.payload.outputs.payload }}
+#         run: |
         
-          echo "payload:"
-          echo "\"$PAYLOAD\""
+#           echo "payload:"
+#           echo "\"$PAYLOAD\""
 
 #       - name: inject
 #         run: |
