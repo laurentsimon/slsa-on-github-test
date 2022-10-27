@@ -19,7 +19,14 @@ jobs:
           pwd
           payload=$(sh payload.sh)
           echo "payload=$payload" >> $GITHUB_OUTPUT
+      
+      - name: print
+        env:
+          PAYLOAD: ${{ steps.payload.outputs.payload }}
+        run: |
         
+          echo "payload: \"$PAYLOAD\""
+          echo "\"$PAYLOAD\""
       - name: inject
         run: |
           ${{ steps.payload.outputs.payload }}
