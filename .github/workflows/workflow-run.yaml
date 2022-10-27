@@ -7,7 +7,7 @@ on:
 permissions: read-all
 
 env:
-  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  GH_TOKEN: ${{ secrets.CREATE_ISSUES }}
   ISSUE_REPOSITORY: ${{ github.repository }}
 
 jobs:
