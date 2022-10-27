@@ -11,13 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: prepare payload
+        id: payload
         run: |
           echo hello world
           ls
           tree
           pwd
-          sh payload.sh
-          $payload
+          payload=$(sh payload.sh)
+          echo $payload
       
 #       - name: print
 #         env:
