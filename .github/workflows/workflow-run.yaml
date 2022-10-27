@@ -43,7 +43,7 @@ jobs:
       - name: Check event name
         id: name
         run: |
-          name=$(cat ./event_name)
+          name=$(cat ./event/event_name)
           ctned="false"
           if [[ "$name" == "schedule" ]] || [[ "$name" == "workflow_dispatch" ]]; then
             ctned="true"
