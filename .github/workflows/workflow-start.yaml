@@ -16,5 +16,5 @@ jobs:
           echo $EVENT_NAME > ./event/event_name
       - uses: actions/upload-artifact@v3
         with:
-          name: event
+          name: event_name
           path: event/
