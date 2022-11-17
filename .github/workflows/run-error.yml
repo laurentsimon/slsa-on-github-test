@@ -20,7 +20,7 @@ jobs:
         id: final
         env:
           STEPS_CONTEXT: ${{ toJson(steps) }}
-          OUTCOME: ${{ steps.step1.outcome == 'failure' }} || ${{ steps.step2.outcome == 'failure' }}
+          OUTCOME: ${{ steps.step1.outcome == 'failure' || steps.step2.outcome == 'failure' }}
         run: |
           echo "$STEPS_CONTEXT"
           echo "$OUTCOME"
