@@ -24,7 +24,7 @@ jobs:
         run: |
           echo "$STEPS_CONTEXT"
           echo "$OUTCOME"
-          if [[ "$OUTCOME" == 'true' ]]; then
+          if [ ! $OUTCOME ]; then
              echo "outcome=success" >> $GITHUB_OUTPUT
           else
             echo "outcome=failure" >> $GITHUB_OUTPUT
