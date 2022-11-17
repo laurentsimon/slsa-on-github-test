@@ -23,7 +23,7 @@ jobs:
           OUTCOME: ${{ steps.step1.outcome == 'failure' }} || ${{ steps.step2.outcome == 'failure' }}
         run: |
           echo "$STEPS_CONTEXT"
-          echo
+          echo "$OUTCOME"
           if [[ "$OUTCOME" == 'true' ]]; then
              echo "outcome=success" >> $GITHUB_OUTPUT
           else
