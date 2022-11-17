@@ -1,0 +1,44 @@
+name: run on error
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run:
+    outputs:
+      outcome: ${{ steps.final.outputs.outcome }}
+    name: fail
+    runs-on: ubuntu-latest
+    steps:
+      - run: exit 1
+        id: step1
+        continue-on-error: true
+      - run: exit 2
+        id: step2
+        continue-on-error: true
+        if: ${{ success() }}
+        run: exit 2
+      - name: final
+        if: ${{ success() }}
+        id: final
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+          OUTCOME: ${{ steps.step1.outcome == 'failure' }} || ${{ steps.step2.outcome == 'failure' }}
+        run: |
+          echo "$STEPS_CONTEXT"
+          echo
+          if [[ "$OUTCOME" == 'true' ]]; then
+             echo "outcome=success" >> $GITHUB_OUTPUT
+          else
+            echo "outcome=failure" >> $GITHUB_OUTPUT
+          fi
+          
+
+  verify:
+    name: verif
+    needs: [run]
+    runs-on: ubuntu-latest
+    steps:
+      - env:
+          OUTCOME: ${{ needs.run.outputs.outcome }}
+        run: echo "outcome=$OUTCOME"
