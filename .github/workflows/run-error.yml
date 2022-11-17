@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  run:
+  run-job:
     outputs:
       outcome: ${{ steps.final.outputs.outcome }}
     name: fail
@@ -36,9 +36,9 @@ jobs:
 
   verify:
     name: verif
-    needs: [run]
+    needs: [run-job]
     runs-on: ubuntu-latest
     steps:
       - env:
-          OUTCOME: ${{ needs.run.outputs.outcome }}
+          OUTCOME: ${{ needs.run-job.outputs.outcome }}
         run: echo "outcome=$OUTCOME"
