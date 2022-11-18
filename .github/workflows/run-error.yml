@@ -27,6 +27,9 @@ jobs:
           SUCCESS: ${{ steps.step1.outcome != 'failure' && steps.step2.outcome != 'failure' }}
           CONTINUE: ${{ inputs.continue-on-error }}
         run: |
+          echo "CONTINUE: $CONTINUE"
+          echo "SUCCESS: $SUCCESS"
+          echo "result: $([ "$CONTINUE" == "false" ] && [ "$SUCCESS" == "false" ])"
           [ "$CONTINUE" == "false" ] && [ "$SUCCESS" == "false" ] && echo "caught error" && exit 1
         #run: echo "outcome=$([ "$SUCCESS" == "true" ] && echo "success" || echo "failure")" >> $GITHUB_OUTPUT
           
