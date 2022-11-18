@@ -48,7 +48,7 @@ jobs:
     if: always()
     steps:
       - env:
-          SUCCESS: ${{ needs.run-job1.outcome != 'failure' && steps.run-job2.outcome != 'failure' }}
+          SUCCESS: ${{ needs.run-job1.outputs.outcome != 'failure' && steps.run-job2.outputs.outcome != 'failure' }}
           NEEDS: ${{ toJson(needs) }}
         run: |
           echo "$NEEDS"
