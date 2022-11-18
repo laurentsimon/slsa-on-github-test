@@ -49,7 +49,7 @@ jobs:
     steps:
       - env:
           SUCCESS: ${{ needs.run-job1.outcome != 'failure' && steps.run-job2.outcome != 'failure' }}
-          STEPS_CONTEXT: ${{ toJson(steps) }}
+          NEEDS: ${{ toJson(needs) }}
         run: |
-          echo "$STEPS_CONTEXT"
+          echo "$NEEDS"
           echo "outcome=$([ "$SUCCESS" == "true" ] && echo "success" || echo "failure")"
