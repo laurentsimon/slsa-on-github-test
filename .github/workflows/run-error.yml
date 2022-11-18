@@ -2,6 +2,14 @@ name: run on error
 
 on:
   workflow_dispatch:
+    inputs:
+      continue-on-error:
+          description: >
+            Prevents a workflow run from failing when a job fails. Set to 'true; to allow a workflow run to pass when this job fails..
+
+            Default: false.
+          type: boolean
+          default: false
 
 jobs:
   run-job1:
@@ -12,7 +20,7 @@ jobs:
       - run: echo "exit 1"
         id: step1
         continue-on-error: true
-      - run: echo "exit 2"
+      - run: exit 1
         id: step2
         continue-on-error: true
       - name: final
@@ -20,7 +28,9 @@ jobs:
         env:
           STEPS_CONTEXT: ${{ toJson(steps) }}
           SUCCESS: ${{ steps.step1.outcome != 'failure' && steps.step2.outcome != 'failure' }}
-        run: echo "outcome=$([ "$SUCCESS" == "true" ] && echo "success" || echo "failure")" >> $GITHUB_OUTPUT
+          CONTINUE: ${{ inputs.continue-on-error }}
+        run: [ "$CONTINUE" == "false" ] && [ "$SUCCESS" == "false" ] && echo "caught error" && exit 1
+        #run: echo "outcome=$([ "$SUCCESS" == "true" ] && echo "success" || echo "failure")" >> $GITHUB_OUTPUT
           
   run-job2:
     outputs:
