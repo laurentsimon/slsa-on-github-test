@@ -12,7 +12,7 @@ jobs:
       - run: echo "exit 1"
         id: step1
         continue-on-error: true
-      - run: exit 2
+      - run: echo "exit 2"
         id: step2
         continue-on-error: true
       - name: final
