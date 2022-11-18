@@ -4,10 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       continue-on-error:
-          description: >
-            Prevents a workflow run from failing when a job fails. Set to 'true; to allow a workflow run to pass when this job fails..
-
-            Default: false.
+          description: "Prevents a workflow run from failing when a job fails. Set to 'true; to allow a workflow run to p"
           type: boolean
           default: false
 
