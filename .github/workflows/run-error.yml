@@ -62,5 +62,5 @@ jobs:
           NEEDS: ${{ toJson(needs) }}
         run: |
           echo "$NEEDS"
-          [ "$CONTINUE" == "false" ] && [ "$SUCCESS" == "false" ] && echo "caught error" && exit 20
+          [ "$CONTINUE" == "false" ] && [ "$SUCCESS" == "false" ]
           #echo "outcome=$([ "$SUCCESS" == "true" ] && echo "success" || echo "failure")"
