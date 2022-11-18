@@ -64,7 +64,7 @@ jobs:
           echo "$NEEDS"
           echo "CONTINUE: $CONTINUE"
           echo "SUCCESS: $SUCCESS"
-          ([ "$CONTINUE" == "false" ] && [ "$SUCCESS" == "false" ] && exit 23) || echo ok
+          ([ "$CONTINUE" == "false" ] && [ "$SUCCESS" == "false" ] && exit 23)
           if [[ "$CONTINUE" == "false" ]] && [[ "$SUCCESS" == "false" ]]; then
             echo "error"
             echot 20
