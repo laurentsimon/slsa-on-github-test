@@ -7,10 +7,37 @@ jobs:
   run-job:
     outputs:
       outcome: ${{ steps.final.outputs.outcome }}
-    name: fail
     runs-on: ubuntu-latest
     steps:
       - run: echo "exit 1"
+        id: step1
+        continue-on-error: true
+      - run: echo "exit 2"
+        id: step2
+        continue-on-error: true
+      - name: final
+        id: final
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+          SUCCESS: ${{ steps.step1.outcome != 'failure' && steps.step2.outcome != 'failure' }}
+        run: |
+          echo "$STEPS_CONTEXT"
+          echo "$OUTCOME"
+          if [[ "$SUCCESS" == "true" ]]; then
+             echo success
+             echo "outcome=success" >> $GITHUB_OUTPUT
+          else
+            echo failure
+            echo "outcome=failure" >> $GITHUB_OUTPUT
+          fi
+          
+  run-job2:
+    outputs:
+      outcome: ${{ steps.final.outputs.outcome }}
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - run: exit1
         id: step1
         continue-on-error: true
       - run: exit 2
@@ -31,7 +58,6 @@ jobs:
             echo failure
             echo "outcome=failure" >> $GITHUB_OUTPUT
           fi
-          
 
   verify:
     name: verif
