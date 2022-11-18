@@ -49,4 +49,4 @@ jobs:
     steps:
       - env:
           SUCCESS: ${{ needs.run-job1.outcome != 'failure' && steps.run-job2.outcome != 'failure' }}
-        run: echo "outcome=$SUCCESS"
+        run: echo "outcome=$([ "$SUCCESS" == "true" ] && echo "success" || echo "failure")"
