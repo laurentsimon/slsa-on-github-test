@@ -10,8 +10,8 @@ on:
 
 jobs:
   run-job1:
-#     outputs:
-#       outcome: ${{ steps.final.outputs.outcome }}
+    outputs:
+      outcome: ${{ steps.final.outputs.outcome }}
     runs-on: ubuntu-latest
     steps:
       - run: echo "exit 1"
@@ -25,41 +25,42 @@ jobs:
         env:
           STEPS_CONTEXT: ${{ toJson(steps) }}
           SUCCESS: ${{ steps.step1.outcome != 'failure' && steps.step2.outcome != 'failure' }}
-          CONTINUE: ${{ inputs.continue-on-error }}
-        run: |
-          echo "CONTINUE: $CONTINUE"
-          echo "SUCCESS: $SUCCESS"
-          [ "$CONTINUE" == "false" ] && [ "$SUCCESS" == "false" ] && echo "caught error" && exit 20
-        #run: echo "outcome=$([ "$SUCCESS" == "true" ] && echo "success" || echo "failure")" >> $GITHUB_OUTPUT
-          
-#   run-job2:
-#     outputs:
-#       outcome: ${{ steps.final.outputs.outcome }}
-#     runs-on: ubuntu-latest
-#     if: startsWith(github.ref, 'refs/tags/')
-#     steps:
-#       - run: exit1
-#         id: step1
-#         continue-on-error: true
-#       - run: exit 2
-#         id: step2
-#         continue-on-error: true
-#       - name: final
-#         id: final
-#         env:
-#           STEPS_CONTEXT: ${{ toJson(steps) }}
-#           SUCCESS: ${{ steps.step1.outcome != 'failure' && steps.step2.outcome != 'failure' }}
-#         run: echo "outcome=$([ "$SUCCESS" == "true" ] && echo "success" || echo "failure")" >> $GITHUB_OUTPUT
-
-#   verify:
-#     name: verif
-#     needs: [run-job1, run-job2]
-#     runs-on: ubuntu-latest
-#     if: always()
-#     steps:
-#       - env:
-#           SUCCESS: ${{ needs.run-job1.outputs.outcome != 'failure' && steps.run-job2.outputs.outcome != 'failure' }}
-#           NEEDS: ${{ toJson(needs) }}
 #         run: |
-#           echo "$NEEDS"
-#           echo "outcome=$([ "$SUCCESS" == "true" ] && echo "success" || echo "failure")"
+#           echo "CONTINUE: $CONTINUE"
+#           echo "SUCCESS: $SUCCESS"
+#           [ "$CONTINUE" == "false" ] && [ "$SUCCESS" == "false" ] && echo "caught error" && exit 20
+        run: echo "outcome=$([ "$SUCCESS" == "true" ] && echo "success" || echo "failure")" >> $GITHUB_OUTPUT
+          
+  run-job2:
+    outputs:
+      outcome: ${{ steps.final.outputs.outcome }}
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - run: exit1
+        id: step1
+        continue-on-error: true
+      - run: exit 2
+        id: step2
+        continue-on-error: true
+      - name: final
+        id: final
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+          SUCCESS: ${{ steps.step1.outcome != 'failure' && steps.step2.outcome != 'failure' }}
+        run: echo "outcome=$([ "$SUCCESS" == "true" ] && echo "success" || echo "failure")" >> $GITHUB_OUTPUT
+
+  verify:
+    name: verif
+    needs: [run-job1, run-job2]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - env:
+          SUCCESS: ${{ needs.run-job1.outputs.outcome != 'failure' && steps.run-job2.outputs.outcome != 'failure' }}
+          CONTINUE: ${{ inputs.continue-on-error }}
+          NEEDS: ${{ toJson(needs) }}
+        run: |
+          echo "$NEEDS"
+          [ "$CONTINUE" == "false" ] && [ "$SUCCESS" == "false" ] && echo "caught error" && exit 20
+          #echo "outcome=$([ "$SUCCESS" == "true" ] && echo "success" || echo "failure")"
