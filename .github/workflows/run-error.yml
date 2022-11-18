@@ -45,6 +45,7 @@ jobs:
     name: verif
     needs: [run-job1, run-job2]
     runs-on: ubuntu-latest
+    if: always()
     steps:
       - env:
           SUCCESS: ${{ needs.run-job1.outcome != 'failure' && steps.run-job2.outcome != 'failure' }}
