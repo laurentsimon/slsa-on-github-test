@@ -11,4 +11,4 @@ jobs:
 
     steps:
     - name: Debug
-      run: echo "GITHUB_SHA: $$GITHUB_SHA"
+      run: echo "GITHUB_SHA: $GITHUB_SHA"
