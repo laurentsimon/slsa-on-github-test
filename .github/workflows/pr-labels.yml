@@ -11,4 +11,9 @@ jobs:
 
     steps:
     - name: Debug
-      run: echo "GITHUB_SHA: $$GITHUB_SHA"
+      env:
+        PR: ${{ toJson(github.event.pull_request.head.sha) }}
+      run: |
+        echo "GITHUB_SHA: $GITHUB_SHA"
+        echo "PR:"
+        echo "$PR"
