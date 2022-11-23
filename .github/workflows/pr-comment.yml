@@ -6,16 +6,16 @@ on:
 # https://github.com/orgs/community/discussions/25389
 jobs:
   run:
-  if: ${{ github.event.issue.pull_request }}
-  #if: contains(github.event.comment.html_url, '/pull/')    # check if the comments come from pull request, exclude those from issue.
-  runs-on: [ubuntu-latest]
-  steps:
-    - name: say hello
-      env:
-        COMMENT: ${{ toJson(github.event.comment) }}
-      #if: contains(github.event.comment.body, '/support')   # check the comment if it contains the keywords
-      run: |
-        echo "COMMENT: $COMMENT"
+    runs-on: ubuntu-latest
+    if: ${{ github.event.issue.pull_request }}
+    #if: contains(github.event.comment.html_url, '/pull/')    # check if the comments come from pull request, exclude those from issue.
+    steps:
+      - name: say hello
+        env:
+          COMMENT: ${{ toJson(github.event.comment) }}
+        #if: contains(github.event.comment.body, '/support')   # check the comment if it contains the keywords
+        run: |
+          echo "COMMENT: $COMMENT"
     
 #     - name: test
 #     if: contains(github.event.comment.body, '/test')  # check the comment if it contains the keywords
