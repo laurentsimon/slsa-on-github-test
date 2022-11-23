@@ -6,9 +6,9 @@ on:
 
 jobs:
   build:
-    if: ${{ github.event.label.name == 'label-test' }}
     runs-on: ubuntu-latest
 
     steps:
     - name: Debug
-      run: echo "GITHUB_SHA: $GITHUB_SHA"
+      run: |
+        echo "GITHUB_SHA: $GITHUB_SHA"
