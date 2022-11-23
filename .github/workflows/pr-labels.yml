@@ -6,9 +6,14 @@ on:
 
 jobs:
   build:
+    #if: ${{ github.event.label.name == 'label-test' }}
     runs-on: ubuntu-latest
 
     steps:
     - name: Debug
+     env:
+        PR: ${{ toJson(github.event.pull_request.head.sha) }}
       run: |
         echo "GITHUB_SHA: $GITHUB_SHA"
+        echo "PR:"
+        echo "$PR"
