@@ -6,7 +6,7 @@ source "./.github/workflows/scripts/e2e-utils.sh"
 
 #GH=~/slsa/slsa-github-generator/gh/gh_2.9.0_linux_amd64/bin/gh
 
-minimum_version="v1.3.1"
+minimum_version="v2.0.0"
 list="\"$minimum_version\""
 # Check the releases.
 echo "Listing releases"
