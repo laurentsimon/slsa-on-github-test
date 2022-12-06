@@ -34,20 +34,13 @@ jobs:
 
       - name: Generate verifier list
         id: generate-versions
-        #run: ./__THIS_REPO__/.github/workflows/scripts/schedule.actions/verifier.action.sh
-        run: |
-          ls
-          ./__THIS_REPO__/.github/workflows/scripts/schedule.actions/verifier-action.sh
-          #echo 'version=["v1.2.3","v1.2.3","v3.0.0"]' >> $GITHUB_OUTPUT
+        run: ./__THIS_REPO__/.github/workflows/scripts/schedule.actions/verifier-action.sh
 
   verifier-run:
     needs: list-verifiers
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        #version: [v1.2.1, v3.0.0]
-        #version: ${{ fromJson(needs.list-verifiers.outputs.versions) }}
-        #version: ${{ fromJson(needs.build-matrix.outputs.version_matrix) }}
         version: ${{ fromJson(needs.list-verifiers.outputs.version) }}
 
     steps:
@@ -55,10 +48,49 @@ jobs:
         env:
           VERSION: ${{ matrix.version }}
         run: echo "version is $VERSION"
-      # - name: Checkout this repository
-      #   uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # tag=v3.1.2
+      - name: Checkout this repository
+        uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # tag=v3.1.2
+        with:
+          # TODO: remove after testing.
+          repo: slsa-framework/slsa-verifier
+          ref: ${{ matrix.version }}
 
-      # - name: Run the Action
-      #   env:
-      #     CI_ACTION_REF: ${{ matrix.version }}
-      #   uses: ./actions/installer
+      - name: Run the Action
+        env:
+          SLSA_VERIFIER_CI_ACTION_REF: ${{ matrix.version }}
+        uses: ./actions/installer
+
+      - name: Verify the version
+        run: slsa-verifier
+
+      - name: Delete the binary
+        run: |
+          binary_path=$(which slsa-verifier)
+          echo "binary_path: $binary_path"
+          rm -rf "$binary_path"
+
+      - name: Get sha1
+        id: commit
+        env:
+          VERSION: ${{ matrix.version }}
+        run: |
+          # TODO: use $GITHUB_REPOSITORY
+          commit_sha=$(api -H "Accept: application/vnd.github+json" /repos/slsa-framework/slsa-verifier/git/ref/tags/v2.0.0 | jq -r '.object.sha')
+          echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
+          echo "$VERSION: $commit_sha"
+
+      - name: Run the Action
+        env:
+          SLSA_VERIFIER_CI_ACTION_REF: ${{ steps.commit.outputs.commit_sha }}
+        uses: ./actions/installer
+
+      run: |
+          binary_path=$(which slsa-verifier)
+          echo "binary_path: $binary_path"
+          rm -rf "$binary_path"
+
+      - name: Install invalid commit
+        run: |
+          echo "TODO"
+
+# TODO: a non-existent version and commit.
