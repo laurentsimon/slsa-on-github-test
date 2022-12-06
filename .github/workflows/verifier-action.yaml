@@ -10,7 +10,6 @@ permissions: read-all
 env:
   #PAT_TOKEN: ${{ secrets.E2E_GENERIC_TOKEN }}
   GH_TOKEN: ${{ github.token }}
-  SCRIPT_LIB_DIR: example-package
   ISSUE_REPOSITORY: ${{ github.repository }}
 
 jobs:
@@ -29,7 +28,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # tag=v3.1.2
         with:
-          path: ${{ env.SCRIPT_LIB_DIR }}
           repository: slsa-framework/example-package
           ref: main
 
@@ -37,6 +35,7 @@ jobs:
         id: generate-versions
         #run: ./__THIS_REPO__/.github/workflows/scripts/schedule.actions/verifier.action.sh
         run: |
+          ls
           ./__THIS_REPO__/.github/workflows/scripts/schedule.actions/verifier-action.sh
           #echo 'version=["v1.2.3","v1.2.3","v3.0.0"]' >> $GITHUB_OUTPUT
 

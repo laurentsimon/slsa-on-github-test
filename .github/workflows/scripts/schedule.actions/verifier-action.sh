@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # shellcheck source=/dev/null
-source "./$SCRIPT_LIB_DIR/.github/workflows/scripts/e2e-utils.sh"
+source "./.github/workflows/scripts/e2e-utils.sh"
 
 #GH=~/slsa/slsa-github-generator/gh/gh_2.9.0_linux_amd64/bin/gh
 
