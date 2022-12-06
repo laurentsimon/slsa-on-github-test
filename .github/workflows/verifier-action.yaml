@@ -36,16 +36,17 @@ jobs:
       - name: Generate verifier list
         id: generate-versions
         #run: ./__THIS_REPO__/.github/workflows/scripts/schedule.actions/verifier.action.sh
-        run: echo '::set-output name=version::[v1.2.1, v3.0.0]'
+        run: |
+          echo "version=[v1.2.1, v3.0.0]" >> $GITHUB_OUTPUT
 
   verifier-run:
     needs: list-verifiers
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        version: [v1.2.1, v3.0.0]
+        #version: [v1.2.1, v3.0.0]
         #version: ${{ fromJson(needs.list-verifiers.outputs.versions) }}
-        #version: ${{ needs.list-verifiers.outputs.version }}
+        version: ${{ needs.list-verifiers.outputs.version }}
 
     steps:
       - name: Debug
