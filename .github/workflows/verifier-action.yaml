@@ -43,8 +43,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        version: [v1.2.1, v3.0.0]
         #version: ${{ fromJson(needs.list-verifiers.outputs.versions) }}
-        version: ${{ needs.list-verifiers.outputs.version }}
+        #version: ${{ needs.list-verifiers.outputs.version }}
 
     steps:
       - name: Debug
