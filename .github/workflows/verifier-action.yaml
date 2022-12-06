@@ -57,23 +57,6 @@ jobs:
           repository: slsa-framework/slsa-verifier
           ref: ${{ matrix.version }}
 
-      - name: Run the Action
-        if: ${{ ! contains(matrix.version, '-rc' ) }}
-        env:
-          SLSA_VERIFIER_CI_ACTION_REF: ${{ matrix.version }}
-        uses: ./actions/installer
-
-      - name: Verify the version
-        if: ${{ ! contains(matrix.version, '-rc' ) }}
-        run: slsa-verifier
-
-      - name: Delete the binary
-        if: ${{ ! contains(matrix.version, '-rc' ) }}
-        run: |
-          binary_path=$(which slsa-verifier)
-          echo "binary_path: $binary_path"
-          rm -rf "$binary_path"
-
       - name: Get sha1
         if: ${{ ! contains(matrix.version, '-rc' ) }}
         id: commit
@@ -85,11 +68,28 @@ jobs:
           echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
           echo "$VERSION: $commit_sha"
 
-      - name: Run the Action
+      - name: Run the Action at commit
         if: ${{ ! contains(matrix.version, '-rc' ) }}
         env:
           SLSA_VERIFIER_CI_ACTION_REF: ${{ steps.commit.outputs.commit_sha }}
         uses: ./actions/installer
+
+      - name: Delete the binary
+        if: ${{ ! contains(matrix.version, '-rc' ) }}
+        run: |
+          binary_path=$(which slsa-verifier)
+          echo "binary_path: $binary_path"
+          rm -rf "$binary_path"
+
+      - name: Run the Action at tag
+        if: ${{ ! contains(matrix.version, '-rc' ) }}
+        env:
+          SLSA_VERIFIER_CI_ACTION_REF: ${{ matrix.version }}
+        uses: ./actions/installer
+
+      - name: Verify the version
+        if: ${{ ! contains(matrix.version, '-rc' ) }}
+        run: slsa-verifier
 
       - name: Delete the binary
         if: ${{ ! contains(matrix.version, '-rc' ) }}
