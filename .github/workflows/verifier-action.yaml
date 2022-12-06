@@ -37,7 +37,8 @@ jobs:
         id: generate-versions
         #run: ./__THIS_REPO__/.github/workflows/scripts/schedule.actions/verifier.action.sh
         run: |
-          echo "version=[v1.2.1, v3.0.0]" >> $GITHUB_OUTPUT
+          #run: echo "::set-output name=matrix::{\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}"
+          echo 'version=["v1.2.3","v1.2.3","v3.0.0"]' >> $GITHUB_OUTPUT
 
   verifier-run:
     needs: list-verifiers
@@ -46,7 +47,8 @@ jobs:
       matrix:
         #version: [v1.2.1, v3.0.0]
         #version: ${{ fromJson(needs.list-verifiers.outputs.versions) }}
-        version: ${{ needs.list-verifiers.outputs.version }}
+        #version: ${{ fromJson(needs.build-matrix.outputs.version_matrix) }}
+        version: ${{ fromJson(needs.list-verifiers.outputs.version) }}
 
     steps:
       - name: Debug
