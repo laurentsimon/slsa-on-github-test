@@ -37,7 +37,6 @@ jobs:
         id: generate-versions
         #run: ./__THIS_REPO__/.github/workflows/scripts/schedule.actions/verifier.action.sh
         run: |
-          #run: echo "::set-output name=matrix::{\"include\":[{\"project\":\"foo\",\"config\":\"Debug\"},{\"project\":\"bar\",\"config\":\"Release\"}]}"
           echo 'version=["v1.2.3","v1.2.3","v3.0.0"]' >> $GITHUB_OUTPUT
 
   verifier-run:
