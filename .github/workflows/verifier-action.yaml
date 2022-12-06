@@ -1,24 +1,59 @@
 name: verifier action
-
 on:
+  # Daily run.
+  # schedule:
+  #   - cron: "0 4 * * *"
   workflow_dispatch:
-  
-jobs:
-  tag:
-    name: tag
-    runs-on: ubuntu-latest
-    steps:
-      - uses: slsa-framework/slsa-verifier/actions/installer@v1.4.1
-      - name: run it
-        run: |
-          set -euo pipefail
-          slsa-verifier
-  hash:
-    name: hash
-    runs-on: ubuntu-latest
-    steps:
-      - uses: slsa-framework/slsa-verifier/actions/installer@e6428d7da594455a4c2b7f24907fec421a5e0e95 # tag=v1.4.1
-      - run: |
-          set -euo pipefail
-          slsa-verifier
 
+permissions: read-all
+
+env:
+  #PAT_TOKEN: ${{ secrets.E2E_GENERIC_TOKEN }}
+  GH_TOKEN: ${{ github.token }}
+  SCRIPT_LIB_DIR: example-package
+  ISSUE_REPOSITORY: ${{ github.repository }}
+
+jobs:
+  list-verifiers:
+    runs-on: ubuntu-latest
+    outputs:
+      # https://github.blog/changelog/2020-04-15-github-actions-new-workflow-features/#new-fromjson-method-in-expressions
+      # https://docs.github.com/en/actions/learn-github-actions/expressions#fromjson
+      versions: ${{ steps.generate-versions.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # tag=v3.1.2
+        with:
+          path: ${{ env.SCRIPT_LIB_DIR }}
+          repository: slsa-framework/example-package
+          ref: main
+
+      - name: Checkout
+        uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # tag=v3.1.2
+        with:
+          path: __THIS_REPO__
+
+      - name: Generate verifier list
+        id: generate-versions
+        #run: ./__THIS_REPO__/.github/workflows/scripts/schedule.actions/verifier.action.sh
+        run: echo '::set-output name=versions::["v1.2.1","v3.0.0"]'
+
+  verifier-run:
+    needs: list-verifiers
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: ${{ fromJson(needs.list-verifiers.outputs.versions) }}
+
+    steps:
+      - name: Debug
+        env:
+          VERSION: ${{ matrix.version }}
+        run: echo "version is $VERSION"
+      # - name: Checkout this repository
+      #   uses: actions/checkout@a12a3943b4bdde767164f792f33f40b04645d846 # tag=v3.1.2
+
+      # - name: Run the Action
+      #   env:
+      #     CI_ACTION_REF: ${{ matrix.version }}
+      #   uses: ./actions/installer
