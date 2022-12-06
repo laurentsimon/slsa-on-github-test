@@ -36,7 +36,7 @@ jobs:
       - name: Generate verifier list
         id: generate-versions
         #run: ./__THIS_REPO__/.github/workflows/scripts/schedule.actions/verifier.action.sh
-        run: echo '::set-output name=versions::["v1.2.1","v3.0.0"]'
+        run: echo '::set-output name=versions::[v1.2.1, v3.0.0]'
 
   verifier-run:
     needs: list-verifiers
