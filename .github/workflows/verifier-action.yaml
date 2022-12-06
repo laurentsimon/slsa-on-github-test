@@ -38,8 +38,8 @@ jobs:
         #run: ./__THIS_REPO__/.github/workflows/scripts/schedule.actions/verifier.action.sh
         run: |
           ls
-          tree
-          ./__THIS_REPO__/.github/workflows/scripts/schedule.actions/verifier.action.sh
+          tree -a
+          ./__THIS_REPO__/.github/workflows/scripts/schedule.actions/verifier-action.sh
           #echo 'version=["v1.2.3","v1.2.3","v3.0.0"]' >> $GITHUB_OUTPUT
 
   verifier-run:
