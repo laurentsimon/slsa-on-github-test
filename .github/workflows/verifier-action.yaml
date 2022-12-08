@@ -5,6 +5,8 @@ on:
   #   - cron: "0 4 * * *"
   workflow_dispatch:
 
+  #TODO: add inputs and use it to run for a pre-release.
+
 permissions: read-all
 
 env:
