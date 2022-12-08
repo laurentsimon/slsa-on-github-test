@@ -44,7 +44,6 @@ jobs:
     strategy:
       matrix:
         version: ${{ fromJson(needs.list-verifiers.outputs.version) }}
-
     steps:
       - name: Debug
         env:
@@ -76,6 +75,14 @@ jobs:
           SLSA_VERIFIER_CI_ACTION_REF: ${{ steps.commit.outputs.commit_sha }}
         uses: ./actions/installer
 
+      - name: Verify the version
+        env:
+          VERSION: ${{ matrix.version }}
+        #if: ${{ ! contains(matrix.version, '-rc' ) }}
+        run: |
+          version=$(slsa-verifier version 2>&1 | grep GitVersion)
+          [ "$version" == "$VERSION" ]
+
       - name: Delete the binary
         #if: ${{ ! contains(matrix.version, '-rc' ) }}
         run: |
@@ -90,8 +97,12 @@ jobs:
         uses: ./actions/installer
 
       - name: Verify the version
+        env:
+          VERSION: ${{ matrix.version }}
         #if: ${{ ! contains(matrix.version, '-rc' ) }}
-        run: slsa-verifier
+        run: |
+          version=$(slsa-verifier version 2>&1 | grep GitVersion)
+          [ "$version" == "$VERSION" ]
 
       - name: Delete the binary
         #if: ${{ ! contains(matrix.version, '-rc' ) }}
