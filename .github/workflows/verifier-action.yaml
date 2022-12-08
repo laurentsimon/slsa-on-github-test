@@ -128,7 +128,6 @@ jobs:
       - run: ./.github/workflows/scripts/e2e-report-success.sh
 
   if-failed:
-    needs: verifier-run
     needs: [verifier-run]
     if: always() && needs.verifier-run.result == 'failure'
     steps:
