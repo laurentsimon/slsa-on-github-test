@@ -74,7 +74,8 @@ jobs:
           version=$(slsa-verifier version 2>&1 | grep GitVersion | cut -d ':' -f2 | tr -d "[:space:]")
           echo "version: $version"
           echo "VERSION: $VERSION"
-          [ "$version" == "$VERSION" ]
+          # Note: the version reported by the slsa-verifier does not contain the leading `v`.
+          [ "$version" == "${VERSION:1}" ]
 
       - name: Delete the binary
         #if: ${{ ! contains(matrix.version, '-rc' ) }}
@@ -111,7 +112,8 @@ jobs:
         #if: ${{ ! contains(matrix.version, '-rc' ) }}
         run: |
           version=$(slsa-verifier version 2>&1 | grep GitVersion)
-          [ "$version" == "$VERSION" ]
+          # Note: the version reported by the slsa-verifier does not contain the leading `v`.
+          [ "$version" == "${VERSION:1}" ]
 
       - name: Delete the binary
         #if: ${{ ! contains(matrix.version, '-rc' ) }}
