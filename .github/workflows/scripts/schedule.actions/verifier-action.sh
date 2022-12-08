@@ -20,6 +20,8 @@ while read -r line; do
     fi
 done <<<"$release_list"
 
-versions="[$list]"
+# TODO: re-enable after testing
+#versions="[$list]"
+versions="[v2.0.1-rc.2]"
 echo "version=$versions" >> "$GITHUB_OUTPUT"
 #echo "::set-output name=version::$versions"
