@@ -71,7 +71,7 @@ jobs:
           VERSION: ${{ matrix.version }}
         #if: ${{ ! contains(matrix.version, '-rc' ) }}
         run: |
-          version=$(slsa-verifier version 2>&1 | grep GitVersion)
+          version=$(slsa-verifier version 2>&1 | grep GitVersion | cut -d ':' -f2 | tr -d "[:space:]")
           echo "version: $version"
           echo "VERSION: $VERSION"
           [ "$version" == "$VERSION" ]
