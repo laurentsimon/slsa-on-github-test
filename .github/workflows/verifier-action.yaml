@@ -129,6 +129,7 @@ jobs:
 
   if-failed:
     needs: [verifier-run]
+    runs-on: ubuntu-latest
     if: always() && needs.verifier-run.result == 'failure'
     steps:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
