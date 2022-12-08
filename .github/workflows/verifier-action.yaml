@@ -113,4 +113,27 @@ jobs:
         run: |
           echo "TODO"
 
-# TODO: a non-existent version and commit.
+  # TODO: a non-existent version and commit.
+
+  if-succeed:
+    needs: [verifier-run]
+    runs-on: ubuntu-latest
+    # We use `== 'failure'` instead of ` != 'success'` because we want to ignore skipped jobs, if there are any.
+    if: always() && needs.verifier-run.result != 'failure'
+    steps:
+      - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+        with:
+          repository: slsa-framework/example-package
+          ref: main
+      - run: ./.github/workflows/scripts/e2e-report-success.sh
+
+  if-failed:
+    needs: verifier-run
+    needs: [verifier-run]
+    if: always() && needs.verifier-run.result == 'failure'
+    steps:
+      - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
+        with:
+          repository: slsa-framework/example-package
+          ref: main
+      - run: ./.github/workflows/scripts/e2e-report-failure.sh
