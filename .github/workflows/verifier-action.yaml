@@ -81,6 +81,8 @@ jobs:
           repository: slsa-framework/slsa-verifier
           ref: ${{ matrix.version }}
 
+      # Install at tag.
+      # ==============
       - name: Run the Action at tag
         if: ${{ inputs.version != '' || ! contains(matrix.version, '-rc' ) }}
         env:
@@ -105,8 +107,8 @@ jobs:
           echo "binary_path: $binary_path"
           rm -rf "$binary_path"
 
-      # =====================================
-
+      # Install at commit sha.
+      # =====================
       - name: Get sha1
         if: ${{ inputs.version != '' || ! contains(matrix.version, '-rc' ) }}
         id: commit
@@ -143,20 +145,42 @@ jobs:
           echo "binary_path: $binary_path"
           rm -rf "$binary_path"
 
+      # Install at invalid commit.
+      # =========================
       - name: Install invalid commit
+        id: invalid-commit
         if: ${{ inputs.version != '' || ! contains(matrix.version, '-rc' ) }}
+        continue-on-error: true
         run: |
           echo "TODO"
+      - env:
+          SUCCESS: ${{ steps.invalid-commit.outcome == 'failure' }}
+        run: |
+          [ "$SUCCESS" == "true" ]
 
+      # Install at inexistent tag.
+      # =========================
       - name: Install non-existent tag
+        id: inexistent-tag
         if: ${{ inputs.version != '' || ! contains(matrix.version, '-rc' ) }}
         run: |
           echo "TODO"
+      - env:
+          SUCCESS: ${{ steps.inexistent-tag.outcome == 'failure' }}
+        run: |
+          [ "$SUCCESS" == "true" ]
 
+      # Install at empty tag.
+      # =====================
       - name: Install empty tag
+        id: empty-tag
         if: ${{ inputs.version != '' || ! contains(matrix.version, '-rc' ) }}
         run: |
           echo "TODO"
+      - env:
+          SUCCESS: ${{ steps.inexistent-tag.outcome == 'failure' }}
+        run: |
+          [ "$SUCCESS" == "true" ]
 
   # TODO: a non-existent version and commit.
 
