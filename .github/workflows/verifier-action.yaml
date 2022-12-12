@@ -112,16 +112,14 @@ jobs:
       - name: Get sha1
         if: ${{ inputs.version != '' || ! contains(matrix.version, '-rc' ) }}
         id: commit
-        env:
-          VERSION: ${{ matrix.version }}
         run: |
           # TODO: use $GITHUB_REPOSITORY
           commit_sha=$(gh api -H "Accept: application/vnd.github+json" /repos/slsa-framework/slsa-verifier/git/ref/tags/v2.0.0 | jq -r '.object.sha')
           echo "commit_sha=$commit_sha" >> "$GITHUB_OUTPUT"
-          echo "$VERSION: $commit_sha"
 
       - run: |
           echo "commit: ${{ steps.commit.outputs.commit_sha }}"
+          echo "version: ${{ matrix.version }}"
 
       - name: Run the Action at commit
         if: ${{ inputs.version != '' || ! contains(matrix.version, '-rc' ) }}
@@ -135,6 +133,7 @@ jobs:
         if: ${{ inputs.version != '' || ! contains(matrix.version, '-rc' ) }}
         run: |
           version=$(slsa-verifier version 2>&1 | grep GitVersion | cut -d ':' -f2 | tr -d "[:space:]")
+          slsa-verifier version
           echo "version: $version"
           echo "VERSION: $VERSION"
           # Note: the version reported by the slsa-verifier does not contain the leading `v`.
