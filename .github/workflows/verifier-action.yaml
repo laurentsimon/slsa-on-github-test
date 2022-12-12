@@ -157,8 +157,7 @@ jobs:
         continue-on-error: true
         env:
           SLSA_VERIFIER_CI_ACTION_REF: 55ca6286e3e4f4fba5d0448333fa99fc5a404a73
-        run: |
-          echo "TODO"
+        uses: ./actions/installer
       - env:
           SUCCESS: ${{ steps.invalid-commit.outcome == 'failure' }}
         run: |
@@ -171,8 +170,7 @@ jobs:
         if: ${{ inputs.version != '' || ! contains(matrix.version, '-rc' ) }}
         env:
           SLSA_VERIFIER_CI_ACTION_REF: v100.3.5
-        run: |
-          echo "TODO"
+        uses: ./actions/installer
       - env:
           SUCCESS: ${{ steps.inexistent-tag.outcome == 'failure' }}
         run: |
@@ -185,8 +183,7 @@ jobs:
         if: ${{ inputs.version != '' || ! contains(matrix.version, '-rc' ) }}
         env:
           SLSA_VERIFIER_CI_ACTION_REF:
-        run: |
-          echo "TODO"
+        uses: ./actions/installer
       - env:
           SUCCESS: ${{ steps.inexistent-tag.outcome == 'failure' }}
         run: |
