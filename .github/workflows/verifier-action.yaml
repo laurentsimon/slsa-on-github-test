@@ -168,6 +168,7 @@ jobs:
       - name: Install non-existent tag
         id: inexistent-tag
         if: ${{ inputs.version != '' || ! contains(matrix.version, '-rc' ) }}
+        continue-on-error: true
         env:
           SLSA_VERIFIER_CI_ACTION_REF: v100.3.5
         uses: ./actions/installer
@@ -181,6 +182,7 @@ jobs:
       - name: Install empty tag
         id: empty-tag
         if: ${{ inputs.version != '' || ! contains(matrix.version, '-rc' ) }}
+        continue-on-error: true
         env:
           SLSA_VERIFIER_CI_ACTION_REF:
         uses: ./actions/installer
