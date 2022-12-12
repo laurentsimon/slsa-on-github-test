@@ -135,6 +135,8 @@ jobs:
         if: ${{ inputs.version != '' || ! contains(matrix.version, '-rc' ) }}
         run: |
           version=$(slsa-verifier version 2>&1 | grep GitVersion)
+          echo "version: $version"
+          echo "VERSION: $VERSION"
           # Note: the version reported by the slsa-verifier does not contain the leading `v`.
           [ "$version" == "${VERSION:1}" ]
 
