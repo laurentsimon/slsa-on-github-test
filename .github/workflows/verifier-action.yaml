@@ -47,7 +47,7 @@ jobs:
         id: generate-prerelease
         env:
           PRE_RELEASE_VERSION: ${{ inputs.version }}
-        run: echo "version=$PRE_RELEASE_VERSION" >> "$GITHUB_OUTPUT"
+        run: echo "version=[\"$PRE_RELEASE_VERSION\"]" >> "$GITHUB_OUTPUT"
 
       - name: Generate pre-release list
         id: generate-versions
