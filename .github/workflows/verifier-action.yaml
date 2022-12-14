@@ -194,7 +194,8 @@ jobs:
     needs: [verifier-run]
     runs-on: ubuntu-latest
     # We use `== 'failure'` instead of ` != 'success'` because we want to ignore skipped jobs, if there are any.
-    if: always() && github.event_name != 'workflow_dispatch' && needs.verifier-run.result != 'failure'
+    #if: github.event_name != 'workflow_dispatch' && needs.verifier-run.result != 'failure'
+    if: needs.verifier-run.result != 'failure'
     steps:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
         with:
@@ -203,10 +204,10 @@ jobs:
       - run: ./.github/workflows/scripts/e2e-report-success.sh
 
   if-failed:
-
     needs: [verifier-run]
     runs-on: ubuntu-latest
-    if: always() && github.event_name != 'workflow_dispatch' && needs.verifier-run.result == 'failure'
+    #if: always() && github.event_name != 'workflow_dispatch' && needs.verifier-run.result == 'failure'
+    if: always() && needs.verifier-run.result == 'failure'
     steps:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
         with:
