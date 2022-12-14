@@ -9,7 +9,6 @@ on:
         type: string
         description: The version to to test for pre-release.
         required: false
-        default: Leave empty to test released versions.
 
 permissions: read-all
 
@@ -221,7 +220,6 @@ jobs:
     permissions:
       contents: read
       issues: write
-    #if: always() && needs.verifier-run.result == 'failure'
     steps:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
         with:
