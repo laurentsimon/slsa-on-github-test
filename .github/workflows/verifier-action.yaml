@@ -53,7 +53,8 @@ jobs:
       - name: Debug
         env:
           VERSION: ${{ inputs.version }}
-        run: echo "version: \"$VERSION\""
+        run: |
+          echo "version: \"$VERSION\""
 
       - name: Generate pre-release list
         id: generate-versions
