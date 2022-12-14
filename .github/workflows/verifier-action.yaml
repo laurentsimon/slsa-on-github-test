@@ -70,7 +70,7 @@ jobs:
       - name: Debug
         env:
           VERSION: ${{ matrix.version }}
-        run: echo "version is '$VERSION'"
+        run: echo "version is '$VERSION'" && exit 1
 
       - name: Checkout this repository
         if: ${{ inputs.version != '' || ! contains(matrix.version, '-rc' ) }}
