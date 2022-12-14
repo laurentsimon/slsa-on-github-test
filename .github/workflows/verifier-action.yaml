@@ -8,12 +8,14 @@ on:
       version:
         type: string
         description: The version to to test for pre-release.
-        required: true
+        required: false
+        default: Leav empty to test released versions.
 
 permissions: read-all
 
 env:
-  GH_TOKEN: ${{ secrets.CREATE_ISSUES }}
+  #GH_TOKEN: ${{ secrets.CREATE_ISSUES }}
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   ISSUE_REPOSITORY: ${{ github.repository }}
 
 jobs:
@@ -37,12 +39,12 @@ jobs:
           path: __THIS_REPO__
 
       - name: Generate verifier list
-        if: github.event_name != 'workflow_dispatch'
+        if: inputs.version == ''
         id: generate-list
         run: ./__THIS_REPO__/.github/workflows/scripts/schedule.actions/verifier-action.sh
 
       - name: Generate pre-release list
-        if: github.event_name == 'workflow_dispatch'
+        if: inputs.version != ''
         id: generate-prerelease
         env:
           PRE_RELEASE_VERSION: ${{ inputs.version }}
@@ -195,7 +197,10 @@ jobs:
     runs-on: ubuntu-latest
     # We use `== 'failure'` instead of ` != 'success'` because we want to ignore skipped jobs, if there are any.
     #if: github.event_name != 'workflow_dispatch' && needs.verifier-run.result != 'failure'
-    if: needs.verifier-run.result != 'failure'
+    if: inputs.version == '' && needs.verifier-run.result != 'failure'
+    permissions:
+      contents: read
+      issues: write
     steps:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
         with:
@@ -206,8 +211,11 @@ jobs:
   if-failed:
     needs: [verifier-run]
     runs-on: ubuntu-latest
-    #if: always() && github.event_name != 'workflow_dispatch' && needs.verifier-run.result == 'failure'
-    if: always() && needs.verifier-run.result == 'failure'
+    if: always() && inputs.version == '' && needs.verifier-run.result == 'failure'
+    permissions:
+      contents: read
+      issues: write
+    #if: always() && needs.verifier-run.result == 'failure'
     steps:
       - uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # tag=v2.4.0
         with:
