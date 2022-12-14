@@ -9,7 +9,7 @@ on:
         type: string
         description: The version to to test for pre-release.
         required: false
-        default: Leav empty to test released versions.
+        default: Leave empty to test released versions.
 
 permissions: read-all
 
@@ -197,7 +197,7 @@ jobs:
     runs-on: ubuntu-latest
     # We use `== 'failure'` instead of ` != 'success'` because we want to ignore skipped jobs, if there are any.
     #if: github.event_name != 'workflow_dispatch' && needs.verifier-run.result != 'failure'
-    if: inputs.version == '' && needs.verifier-run.result != 'failure'
+    if: inputs.version == '' && needs.verifier-run.result != 'failure' && needs.list-verifiers.result != 'failure'
     permissions:
       contents: read
       issues: write
@@ -209,9 +209,9 @@ jobs:
       - run: ./.github/workflows/scripts/e2e-report-success.sh
 
   if-failed:
-    needs: [verifier-run]
+    needs: [verifier-run, list-verifiers]
     runs-on: ubuntu-latest
-    if: always() && inputs.version == '' && needs.verifier-run.result == 'failure'
+    if: always() && inputs.version == '' && (needs.verifier-run.result == 'failure' || needs.list-verifiers.result == 'failure')
     permissions:
       contents: read
       issues: write
