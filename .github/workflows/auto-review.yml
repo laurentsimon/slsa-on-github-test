@@ -11,3 +11,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           event: APPROVE
           body: 'Thank you laurentimon'
+          
+      - uses: "pascalgn/automerge-action@v0.15.5"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
