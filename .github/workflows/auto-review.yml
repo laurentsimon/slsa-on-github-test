@@ -1,6 +1,6 @@
 name: Automatic pull request review
 on: [pull_request]
-permisions: read-all
+permissions: read-all
 jobs:
   automate-pullrequest-review:
     runs-on: ubuntu-latest
