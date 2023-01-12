@@ -61,13 +61,13 @@ if [[ -n "$tmp" ]]; then
     artifactAndbuilderMinArgs+=("$tmp")
 fi
 
-#artifactAndbuilderRawArgs=("${artifactArg[@]}" "$(assemble_raw_builder_args)")
-#artifactAndbuilderFullArgs=("${artifactArg[@]}" "$(assemble_full_builder_args)")
+artifactAndbuilderRawArgs=("${artifactArg[@]}" "$(assemble_raw_builder_args)")
+artifactAndbuilderFullArgs=("${artifactArg[@]}" "$(assemble_full_builder_args)")
 
 gh -R slsa-framework/slsa-verifier release download v2.0.1 -p "slsa-verifier-linux-amd64*"
 chmod u+x slsa-verifier-linux-amd64
-echo ./slsa-verifier-linux-amd64 verify-artifact "${artifactAndbuilderMinArgs[@]}" --provenance-path slsa-verifier-linux-amd64.intoto.jsonl --source-uri github.com/slsa-framework/slsa-verifier --source-tag v2.0.1
-./slsa-verifier-linux-amd64 verify-artifact "${artifactAndbuilderMinArgs[@]}" --provenance-path slsa-verifier-linux-amd64.intoto.jsonl --source-uri github.com/slsa-framework/slsa-verifier --source-tag v2.0.1
+echo ./slsa-verifier-linux-amd64 verify-artifact "${artifactAndbuilderRawArgs[@]}" --provenance-path slsa-verifier-linux-amd64.intoto.jsonl --source-uri github.com/slsa-framework/slsa-verifier --source-tag v2.0.1
+./slsa-verifier-linux-amd64 verify-artifact "${artifactAndbuilderRawArgs[@]}" --provenance-path slsa-verifier-linux-amd64.intoto.jsonl --source-uri github.com/slsa-framework/slsa-verifier --source-tag v2.0.1
 
  
 
