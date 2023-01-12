@@ -3,8 +3,11 @@ name: builder id
 on:
   workflow_dispatch:
 
+permissions: read-all
+
 env:
   THIS_FILE: e2e.go.push.main.default.slsa3.yml
+  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   checkout:
