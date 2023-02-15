@@ -1,20 +1,20 @@
 name: Automatic pull request review
 on: [pull_request]
 #permissions: read-all
-permissions:
-  contents: write
-  pull-requests: write
+# permissions:
+#   contents: write
+#   pull-requests: write
 jobs:
   automate-pullrequest-review:
     runs-on: ubuntu-latest
     steps:
-      - name: Approve pull request
-        if: github.actor == 'laurentsimon'
-        uses: andrewmusgrave/automatic-pull-request-review@0.0.5
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          event: APPROVE
-          body: 'Thank you laurentimon'
+#       - name: Approve pull request
+#         if: github.actor == 'laurentsimon'
+#         uses: andrewmusgrave/automatic-pull-request-review@0.0.5
+#         with:
+#           repo-token: ${{ secrets.GITHUB_TOKEN }}
+#           event: APPROVE
+#           body: 'Thank you laurentimon'
 #       - name: Approve pull request
 #         if: github.actor == 'laurentsimon'
 #         uses: andrewmusgrave/automatic-pull-request-review@0.0.5
