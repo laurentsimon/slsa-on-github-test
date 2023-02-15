@@ -30,3 +30,10 @@ jobs:
 #        with:
 #          token: ${{ secrets.GITHUB_TOKEN }}
     
+# test with remote fork
+# pull_request: fail with remotee fork
+#               succeeds always for local branch, unless 2 LGTM needed. BP settings dont matter it seems
+# pull_request_target:
+# bypass allowed: success
+# bypass not allowed: success
+# codeowners set: fail to merge (bypass settings does not matter)
