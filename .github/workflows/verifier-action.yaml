@@ -18,6 +18,12 @@ env:
   ISSUE_REPOSITORY: ${{ github.repository }}
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: slsa-framework/slsa-verifier/actions/installer@a43888265e1f6aae98c924538298944f2721dcf0 # v2.0.1
+      - run: |
+          slsa-verifier version
   list-verifiers:
     runs-on: ubuntu-latest
     outputs:
