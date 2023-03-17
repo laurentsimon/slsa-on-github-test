@@ -60,7 +60,7 @@ jobs:
       contents: write # To add assets to a release.
     #uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.2
     # This corresponds to laurentsimon/slsa-github-generator@test/imposter
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@b2154e09d44955eb9049a79ccaa7b7ee82e30f53
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@76f344607314113b8c46c14a5cd54a1c05bef408
     with:
       base64-subjects: "${{ needs.build.outputs.digests }}"
       upload-assets: true # Optional: Upload to a new release
