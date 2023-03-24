@@ -79,6 +79,11 @@ runs:
           exit 1
         fi
 
+        # Create the destination directory if it does not exist.
+        if ! [[ -e "${UNTRUSTED_PATH}" ]]; then
+          mkdir -p "${UNTRUSTED_PATH}"
+        fi
+
         # Move all entries (file or folder).
         for file in "${tempdir}"/*; do
             # Ensure we don't overwrite existing files.
