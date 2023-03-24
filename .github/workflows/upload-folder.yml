@@ -53,4 +53,19 @@ jobs:
       
       - name: debug
         run: |
+          set -euo pipefail
+          
           tree output-folder/
+          
+          cd output-folder
+          d=$(tree .)
+          
+          cd ../my-folder
+          u=$(tree .)
+          
+          if [[ "${u}" != "${d}" ]]; then
+            echo "Folder trees differ:"
+            echo "Upload tree: ${u}"
+            echo "Download tree: ${d}"
+            exit 1
+          fi
