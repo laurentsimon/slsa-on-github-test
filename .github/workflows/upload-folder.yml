@@ -27,7 +27,7 @@ jobs:
           echo file4 > "${FOLDER_NAME}"/${FOLDER_INSIDE_NAME}/file4
           
           tree "${FOLDER_NAME}
-        
+
       - name: Upload
         id: upload
         uses: laurentsimon/slsa-on-github-test/.github/actions/secure-upload-folder@main
