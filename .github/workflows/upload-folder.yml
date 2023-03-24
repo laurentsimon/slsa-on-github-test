@@ -21,10 +21,10 @@ jobs:
           mkdir -p "${FOLDER_NAME}/${FOLDER_INSIDE_NAME}"
           mkdir -p "${FOLDER_NAME}/${FOLDER_EMPTY_NAME}"
           
-          echo file1 > "${FOLDER_NAME}"/file1
-          echo file2 > "${FOLDER_NAME}"/file2
-          echo file3 > "${FOLDER_NAME}"/${FOLDER_INSIDE_NAME}/file3
-          echo file4 > "${FOLDER_NAME}"/${FOLDER_INSIDE_NAME}/file4
+          echo file1 > "${FOLDER_NAME}"/file1"
+          echo file2 > "${FOLDER_NAME}"/file2"
+          echo file3 > "${FOLDER_NAME}"/${FOLDER_INSIDE_NAME}/file3"
+          echo file4 > "${FOLDER_NAME}"/${FOLDER_INSIDE_NAME}/file4"
           
           tree "${FOLDER_NAME}
 
