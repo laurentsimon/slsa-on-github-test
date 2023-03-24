@@ -1,4 +1,4 @@
-name: upload folder e2e
+name: upload foler e2e
 
 on:
   # Daily run.
@@ -16,6 +16,8 @@ env:
 jobs:
   secure-upload-folder:
     runs-on: ubuntu-latest
+    outputs:
+      sha256: ${{ steps.upload.outputs.sha256 }}
     steps:
       - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # v3.4.0
       - name: Create folder
@@ -73,7 +75,7 @@ jobs:
         with:
           name: "${{ env.ARTIFACT_NAME }}"
           path: "${{ env.DOWNLOAD_FOLDER_NAME }}"
-          sha256: ${{ steps.upload.outputs.sha256 }}
+          sha256: ${{ needs.secure-upload-folder.outputs.sha256 }}
       
       - name: Download
         id: download-incorrect-hash
@@ -91,7 +93,7 @@ jobs:
         with:
           name: "${{ env.ARTIFACT_NAME }}"
           path: "${{ env.DOWNLOAD_FOLDER_NAME }}"
-          sha256: ${{ steps.upload.outputs.sha256 }}
+          sha256: ${{ needs.secure-upload-folder.outputs.sha256 }}
 
       - name: Download
         id: download-traversal
@@ -100,7 +102,7 @@ jobs:
         with:
           name: "${{ env.ARTIFACT_NAME }}"
           path: ".."
-          sha256: ${{ steps.upload.outputs.sha256 }}
+          sha256: ${{ needs.secure-upload-folder.outputs.sha256 }}
 
       - name: Download
         id: download-outside
@@ -109,7 +111,7 @@ jobs:
         with:
           name: "${{ env.ARTIFACT_NAME }}"
           path: "/tmp"
-          sha256: ${{ steps.upload.outputs.sha256 }}
+          sha256: ${{ needs.secure-upload-folder.outputs.sha256 }}
 
       - name: fail check
         env:
