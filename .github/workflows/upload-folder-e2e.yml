@@ -77,6 +77,10 @@ jobs:
           path: "${{ env.DOWNLOAD_FOLDER_NAME }}"
           sha256: ${{ needs.secure-upload-folder.outputs.sha256 }}
       
+      - name: debug
+        run: |
+          tree .
+
       - name: Download
         id: download-incorrect-hash
         continue-on-error: true
