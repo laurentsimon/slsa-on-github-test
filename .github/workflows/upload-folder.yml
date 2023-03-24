@@ -59,9 +59,11 @@ jobs:
           
           cd output-folder/my-folder
           d=$(tree .)
+          d_sha=$(find . -print0 | sort -z | xargs -0 sha256sum | sha256sum)
           
           cd ../../my-folder
           u=$(tree .)
+          u_sha=$(find . -print0 | sort -z | xargs -0 sha256sum | sha256sum)
           
           if [[ "${u}" != "${d}" ]]; then
             echo "Folder trees differ:"
@@ -69,3 +71,10 @@ jobs:
             echo "Download tree: ${d}"
             exit 1
           fi
+          
+          if [[ "${u_sha}" != "${d_sha}" ]]; then
+            echo "Folder sha differ: ${u_sha} != ${d_sha}"
+            exit 1
+          fi
+          
+          
