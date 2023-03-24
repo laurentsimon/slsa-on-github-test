@@ -69,14 +69,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # v3.4.0
-      - name: Download
-        id: download
+      - name: Download in new folder
         uses: ./.github/actions/secure-download-folder
         with:
           name: "${{ env.ARTIFACT_NAME }}"
           path: "${{ env.DOWNLOAD_FOLDER_NAME }}"
           sha256: ${{ needs.secure-upload-folder.outputs.sha256 }}
-      
+
+      - name: Download locally
+        uses: ./.github/actions/secure-download-folder
+        with:
+          name: "${{ env.ARTIFACT_NAME }}"
+          sha256: ${{ needs.secure-upload-folder.outputs.sha256 }}
+
       - name: debug
         run: |
           tree .
@@ -91,7 +96,7 @@ jobs:
           sha256: 977b0c871b048d6578f5d5b40a5b6030a22fc130831a2d7b45b6868da7b51431
 
       - name: Download
-        id: download-existing-folder
+        id: download-existing-file
         continue-on-error: true
         uses: ./.github/actions/secure-download-folder
         with:
