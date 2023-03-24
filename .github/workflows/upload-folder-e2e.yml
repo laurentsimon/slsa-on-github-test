@@ -1,4 +1,4 @@
-name: upload foler e2e
+name: upload folder e2e
 
 on:
   # Daily run.
@@ -83,11 +83,11 @@ jobs:
         uses: ./.github/actions/secure-download-folder
         with:
           name: "${{ env.ARTIFACT_NAME }}"
-          path: "${{ env.DOWNLOAD_FOLDER_NAME }}"
+          path: "some-folder"
           sha256: 977b0c871b048d6578f5d5b40a5b6030a22fc130831a2d7b45b6868da7b51431
 
       - name: Download
-        id: download-existing-file
+        id: download-existing-folder
         continue-on-error: true
         uses: ./.github/actions/secure-download-folder
         with:
@@ -113,9 +113,16 @@ jobs:
           path: "/tmp"
           sha256: ${{ needs.secure-upload-folder.outputs.sha256 }}
 
+      - name: debug
+        run: |
+          echo "${{ steps.download-incorrect-hash.outcome }}"
+          echo "${{ steps.download-existing-folder.outcome }}"
+          echo "${{ steps.download-traversal.outcome }}"
+          echo "${{ steps.download-outside.outcome }}"
+
       - name: fail check
         env:
-          SUCCESS: ${{ steps.download-incorrect-hash.outcome == 'failure' && steps.download-existing-file.outcome == 'failure' && steps.download-traversal.outcome == 'failure' && steps.download-outside.outcome == 'failure' }}
+          SUCCESS: ${{ steps.download-incorrect-hash.outcome == 'failure' && steps.download-existing-folder.outcome == 'failure' && steps.download-traversal.outcome == 'failure' && steps.download-outside.outcome == 'failure' }}
         run: |
           set -euo pipefail
           [ "$SUCCESS" == "true" ]
