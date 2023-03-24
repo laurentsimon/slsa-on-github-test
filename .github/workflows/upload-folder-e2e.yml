@@ -143,7 +143,7 @@ jobs:
       - run: ./.github/workflows/scripts/e2e-report-success.sh
 
   if-failed:
-    needs: [secure-upload-folder, secure-upload-folder]
+    needs: [secure-upload-folder, secure-download-folder]
     runs-on: ubuntu-latest
     if: always() && github.event_name != 'workflow_dispatch' && (needs.secure-upload-folder.result == 'failure' || needs.secure-download-folder.result == 'failure')
     permissions:
