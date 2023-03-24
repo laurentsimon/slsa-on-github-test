@@ -28,27 +28,27 @@ jobs:
           
           tree "${FOLDER_NAME}
         
-      - name: Upload
-        id: upload
-        uses: slsa-on-github-test/.github/actions/secure-upload-folder@main
-        with:
-          name: "the-name"
-          path: my-folder
+#       - name: Upload
+#         id: upload
+#         uses: slsa-on-github-test/.github/actions/secure-upload-folder@main
+#         with:
+#           name: "the-name"
+#           path: my-folder
       
-      - name: debug
-        env:
-          SHA256: ${{ steps.upload.outputs.sha256 }}
-        run: |
-          echo "SHA256: $SHA256"
-          mkdir output-folder
+#       - name: debug
+#         env:
+#           SHA256: ${{ steps.upload.outputs.sha256 }}
+#         run: |
+#           echo "SHA256: $SHA256"
+#           mkdir output-folder
 
-      - name: Download
-        id: download
-        uses: slsa-on-github-test/.github/actions/secure-download-folder@main
-        with:
-          name: "the-name"
-          path: output-folder
-          sha256: ${{ steps.upload.outputs.sha256 }}
+#       - name: Download
+#         id: download
+#         uses: slsa-on-github-test/.github/actions/secure-download-folder@main
+#         with:
+#           name: "the-name"
+#           path: output-folder
+#           sha256: ${{ steps.upload.outputs.sha256 }}
       
       - name: debug
         run: |
