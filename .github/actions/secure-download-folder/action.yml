@@ -81,12 +81,14 @@ runs:
 
         # Move all entries (file or folder).
         for file in "${tempdir}"/*; do
-            echo "moving file '${resolved_dir}/${file}' to '${resolved_dir}/'"
+            src="${tempdir}/${file}"
+            echo "moving file '${src}' to '${resolved_dir}/'"
             # Ensure we don't overwrite existing files.
-            if [ -e "${resolved_dir}/${file}" ]; then
-              echo "Path '${resolved_dir}/${file}'' already exists"
+            if [ -e "${src}" ]; then
+              echo "Path '${src}'' already exists"
               exit 5
             fi
-            mv "${file}" "${resolved_dir}/"
+            mv "${src}" "${resolved_dir}/"
         done
+ 
 
