@@ -82,7 +82,7 @@ runs:
         # Move all entries (file or folder).
         for file in "${tempdir}"/*; do
             # Ensure we don't overwrite existing files.
-            dst="${resolved_dir}"/$(basename "${src}")
+            dst="${resolved_dir}"/$(basename "${file}")
             echo "moving file '${file}' to '${dst}/'"
             if [ -e "${dst}" ]; then
               echo "Path '${dst}' already exists"
