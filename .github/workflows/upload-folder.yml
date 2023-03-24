@@ -55,12 +55,12 @@ jobs:
         run: |
           set -euo pipefail
           
-          tree output-folder/
+          tree output-folder/my-folder
           
-          cd output-folder
+          cd output-folder/my-folder
           d=$(tree .)
           
-          cd ../my-folder
+          cd ../../my-folder
           u=$(tree .)
           
           if [[ "${u}" != "${d}" ]]; then
