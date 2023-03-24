@@ -129,13 +129,13 @@ jobs:
       - name: debug
         run: |
           echo "${{ steps.download-incorrect-hash.outcome }}"
-          echo "${{ steps.download-existing-folder.outcome }}"
+          echo "${{ steps.download-existing-file.outcome }}"
           echo "${{ steps.download-traversal.outcome }}"
           echo "${{ steps.download-outside.outcome }}"
 
       - name: fail check
         env:
-          SUCCESS: ${{ steps.download-incorrect-hash.outcome == 'failure' && steps.download-existing-folder.outcome == 'failure' && steps.download-traversal.outcome == 'failure' && steps.download-outside.outcome == 'failure' }}
+          SUCCESS: ${{ steps.download-incorrect-hash.outcome == 'failure' && steps.download-existing-file.outcome == 'failure' && steps.download-traversal.outcome == 'failure' && steps.download-outside.outcome == 'failure' }}
         run: |
           set -euo pipefail
           [ "$SUCCESS" == "true" ]
