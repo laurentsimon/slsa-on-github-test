@@ -101,10 +101,9 @@ jobs:
             exit 1
           fi
 
-      - name: Remove local folders
+      - name: Cleanup workspace
         run: |
-          rm -rf "${UPLOAD_FOLDER_NAME}" "${DOWNLOAD_FOLDER_NAME}"
-          rm -rf "${UPLOAD_FOLDER_NO_ROOT_NAME}" "${DOWNLOAD_FOLDER_NO_ROOT_NAME}"
+          rm -rf .
 
       - name: Download locally
         uses: ./.github/actions/secure-download-folder
