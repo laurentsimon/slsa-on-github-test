@@ -67,39 +67,7 @@ jobs:
           sha256: ${{ steps.upload-noroot.outputs.sha256 }}
 
       - name: Validate contents
-        run: |
-          set -euo pipefail
-          # TODO: replace with script dld, upld
-          o="$PWD"
-          tree "${DOWNLOAD_FOLDER_NAME}"
-
-          cd "${UPLOAD_FOLDER_NAME}"
-          upload_tree=$(tree .)
-          cd "../${DOWNLOAD_FOLDER_NAME}/${UPLOAD_FOLDER_NAME}"
-          download_tree=$(tree .)
-
-          if [[ "${upload_tree}" != "${download_tree}" ]]; then
-            echo "Folder trees differ: ${upload_tree} != ${download_tree}"
-            echo "Upload tree: ${upload_tree}"
-            echo "Download tree: ${download_tree}"
-            exit 1
-          fi
-          
-          cd "${o}"
-          tree "${DOWNLOAD_FOLDER_NO_ROOT_NAME}"
-
-          cd "${UPLOAD_FOLDER_NO_ROOT_NAME}"
-          upload_tree=$(tree .)
-
-          cd "../../${DOWNLOAD_FOLDER_NO_ROOT_NAME}/${UPLOAD_FOLDER_NO_ROOT_NAME}"
-          download_tree=$(tree .)
-
-          if [[ "${upload_tree}" != "${download_tree}" ]]; then
-            echo "Folder trees differ: ${upload_tree} != ${download_tree}"
-            echo "Upload tree: ${upload_tree}"
-            echo "Download tree: ${download_tree}"
-            exit 1
-          fi
+        run: bash ./.github/workflows/script/secure-upload-folder.sh
 
       - name: Cleanup workspace
         run: |
