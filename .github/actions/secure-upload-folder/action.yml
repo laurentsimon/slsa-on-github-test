@@ -37,13 +37,20 @@ runs:
           exit 1
         fi
 
-        tempdir=$(mktemp -d)
-        tarball_path="${tempdir}/folder.tgz"
+        target="${UNTRUSTED_PATH}"
+
         # NOTE: we change directory here so that the tarball *only*
         # contains the target folder, not its entire path.
-        dir=$(dirname "${UNTRUSTED_PATH}")
-        cd "${dir}"
-        tar -czvf "${tarball_path}" .
+        #parent_wd=$(dirname "${wd}")
+        #parent_target=$(dirname "${resolved_dir}")
+        #if [[ "${parent_wd}" != "${parent_target}" ]]; then
+        #  cd "${parent_target}"
+        #  target=$(basename "${target}")
+        #fi
+
+        tempdir=$(mktemp -d)
+        tarball_path="${tempdir}/folder.tgz"
+        tar -czvf "${tarball_path}" "${target}"
         echo "tarball-path=${tarball_path}" >> "$GITHUB_OUTPUT"
 
     - name: Upload the artifact
