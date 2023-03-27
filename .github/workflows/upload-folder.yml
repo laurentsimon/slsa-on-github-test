@@ -67,7 +67,7 @@ jobs:
           sha256: ${{ steps.upload-noroot.outputs.sha256 }}
 
       - name: Validate contents
-        run: bash ./.github/workflows/scripts/secure-upload-folder.sh
+        run: bash ./.github/workflows/scripts/schedule.actions/secure-upload-folder.sh
 
       - name: Cleanup workspace
         run: |
