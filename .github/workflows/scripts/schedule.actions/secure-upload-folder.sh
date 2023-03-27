@@ -26,10 +26,11 @@ compare_trees "${upload_tree}" "${download_tree}"
 
 # Folder not at the root of GITHUB_WORKSPACE.
 cd "${original_wd}"
+tree
 tree "${DOWNLOAD_FOLDER_NO_ROOT_NAME}"
 cd "${UPLOAD_FOLDER_NO_ROOT_NAME}"
 upload_tree=$(tree .)
-cd "${DOWNLOAD_FOLDER_NO_ROOT_NAME}/${UPLOAD_FOLDER_NO_ROOT_NAME}"
+cd "../../${DOWNLOAD_FOLDER_NO_ROOT_NAME}/${UPLOAD_FOLDER_NO_ROOT_NAME}"
 download_tree=$(tree .)
 
 compare_trees "${upload_tree}" "${download_tree}"
