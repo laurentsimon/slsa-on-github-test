@@ -13,8 +13,8 @@ env:
   UPLOAD_FOLDER_NAME: "upload-folder"
   DOWNLOAD_FOLDER_NAME: "download-folder"
   ARTIFACT_NO_ROOT_NAME: "my-artifact-noroot"
-  UPLOAD_FOLDER_NO_ROOT_NAME: "the/root/upload-folder-noroot"
-  DOWNLOAD_FOLDER_NO_ROOT_NAME: "the/root/download-folder-noroot"
+  UPLOAD_FOLDER_NO_ROOT_NAME: "upload-root/upload-folder"
+  DOWNLOAD_FOLDER_NO_ROOT_NAME: "download-root/download-folder"
 
 jobs:
   secure-upload-folder:
