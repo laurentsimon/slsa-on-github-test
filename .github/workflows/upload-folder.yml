@@ -6,75 +6,175 @@ on:
 permissions: read-all
 
 jobs:
-  build:
+  secure-upload-folder:
     runs-on: ubuntu-latest
+    env:
+      ARTIFACT_NAME: "my-artifact"
+      UPLOAD_FOLDER_NAME: "upload-folder"
+      DOWNLOAD_FOLDER_NAME: "download-folder"
+      ARTIFACT_NO_ROOT_NAME: "my-artifact-noroot"
+      UPLOAD_FOLDER_NO_ROOT_NAME: "upload-root/upload-folder"
+      DOWNLOAD_FOLDER_NO_ROOT_NAME: "download-root/download-folder"
     steps:
+      - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # v3.4.0
       - name: Create folder
-        env:
-          FOLDER_NAME: "my-folder"
-          FOLDER_INSIDE_NAME: "inside"
-          FOLDER_EMPTY_NAME: "empty"
         run: |
           set -euo pipefail
-          
-          # TODO: empt
-          mkdir -p "${FOLDER_NAME}/${FOLDER_INSIDE_NAME}"
-          mkdir -p "${FOLDER_NAME}/${FOLDER_EMPTY_NAME}"
-          
-          echo file1 > "${FOLDER_NAME}/file1"
-          echo file2 > "${FOLDER_NAME}/file2"
-          echo file3 > "${FOLDER_NAME}/${FOLDER_INSIDE_NAME}/file3"
-          echo file4 > "${FOLDER_NAME}/${FOLDER_INSIDE_NAME}/file4"
-          
-          tree "${FOLDER_NAME}"
+
+          # Folder in the root of GITHUB_WORKSPACE
+          mkdir -p "${UPLOAD_FOLDER_NAME}/inside"
+          mkdir -p "${UPLOAD_FOLDER_NAME}/empty"
+
+          echo file1 > "${UPLOAD_FOLDER_NAME}/file1"
+          echo file2 > "${UPLOAD_FOLDER_NAME}/file2"
+          echo file3 > "${UPLOAD_FOLDER_NAME}/inside/file3"
+          echo file4 > "${UPLOAD_FOLDER_NAME}/inside/file4"
+
+          tree "${UPLOAD_FOLDER_NAME}"
+
+          # Folder not in the root of GITHUB_WORKSPACE
+          mkdir -p "${UPLOAD_FOLDER_NO_ROOT_NAME}"
+          cp -R "${UPLOAD_FOLDER_NAME}"/* "${UPLOAD_FOLDER_NO_ROOT_NAME}"/
+
+          tree "${UPLOAD_FOLDER_NO_ROOT_NAME}"
 
       - name: Upload
         id: upload
-        uses: laurentsimon/slsa-on-github-test/.github/actions/secure-upload-folder@main
+        uses: ./.github/actions/secure-upload-folder
         with:
-          name: "the-name"
-          path: my-folder
-      
-      - name: debug
-        env:
-          SHA256: ${{ steps.upload.outputs.sha256 }}
-        run: |
-          echo "SHA256: $SHA256"
-          tree .
-          mkdir output-folder
+          name: "${{ env.ARTIFACT_NAME }}"
+          path: "${{ env.UPLOAD_FOLDER_NAME }}"
 
-      - name: Download
-        id: download
-        uses: laurentsimon/slsa-on-github-test/.github/actions/secure-download-folder@main
+      - name: Upload
+        id: upload-noroot
+        uses: ./.github/actions/secure-upload-folder
         with:
-          name: "the-name"
-          path: output-folder
+          name: "${{ env.ARTIFACT_NO_ROOT_NAME }}"
+          path: "${{ env.UPLOAD_FOLDER_NO_ROOT_NAME }}"
+
+      - name: Download in new folder
+        uses: ./.github/actions/secure-download-folder
+        with:
+          name: "${{ env.ARTIFACT_NAME }}"
+          path: "${{ env.DOWNLOAD_FOLDER_NAME }}"
           sha256: ${{ steps.upload.outputs.sha256 }}
-      
-      - name: debug
+
+      - name: Download in new folder noroot
+        uses: ./.github/actions/secure-download-folder
+        with:
+          name: "${{ env.ARTIFACT_NO_ROOT_NAME }}"
+          path: "${{ env.DOWNLOAD_FOLDER_NO_ROOT_NAME }}"
+          sha256: ${{ steps.upload-noroot.outputs.sha256 }}
+
+      - name: Validate contents
         run: |
           set -euo pipefail
-          
-          tree output-folder/my-folder
-          
-          cd output-folder/my-folder
-          d=$(tree .)
-          d_sha=$(find . -print0 | sort -z | xargs -0 sha256sum | sha256sum)
-          
-          cd ../../my-folder
-          u=$(tree .)
-          u_sha=$(find . -print0 | sort -z | xargs -0 sha256sum | sha256sum)
-          
-          if [[ "${u}" != "${d}" ]]; then
-            echo "Folder trees differ:"
-            echo "Upload tree: ${u}"
-            echo "Download tree: ${d}"
+          # TODO: replace with script dld, upld
+
+          tree "${DOWNLOAD_FOLDER_NAME}"
+
+          cd "${UPLOAD_FOLDER_NAME}"
+          upload_tree=$(tree .)
+
+          cd "../${DOWNLOAD_FOLDER_NAME}/${UPLOAD_FOLDER_NAME}"
+          download_tree=$(tree .)
+
+          if [[ "${upload_tree}" != "${download_tree}" ]]; then
+            echo "Folder trees differ: ${upload_tree} != ${download_tree}"
+            echo "Upload tree: ${upload_tree}"
+            echo "Download tree: ${download_tree}"
             exit 1
           fi
-          
-          if [[ "${u_sha}" != "${d_sha}" ]]; then
-            echo "Folder sha differ: ${u_sha} != ${d_sha}"
+
+          tree "${DOWNLOAD_FOLDER_NO_ROOT_NAME}"
+
+          cd "${UPLOAD_FOLDER_NO_ROOT_NAME}"
+          upload_tree=$(tree .)
+
+          cd "../${DOWNLOAD_FOLDER_NO_ROOT_NAME}/${UPLOAD_FOLDER_NO_ROOT_NAME}"
+          download_tree=$(tree .)
+
+          if [[ "${upload_tree}" != "${download_tree}" ]]; then
+            echo "Folder trees differ: ${upload_tree} != ${download_tree}"
+            echo "Upload tree: ${upload_tree}"
+            echo "Download tree: ${download_tree}"
             exit 1
           fi
+
+      - name: Remove local folders
+        run: |
+          rm -rf "${UPLOAD_FOLDER_NAME}"
+          rm -rf "${UPLOAD_FOLDER_NO_ROOT_NAME}"
+
+      - name: Download locally
+        uses: ./.github/actions/secure-download-folder
+        with:
+          name: "${{ env.ARTIFACT_NAME }}"
+          sha256: ${{ steps.upload.outputs.sha256 }}
+
+      - name: Download locally noroot
+        uses: ./.github/actions/secure-download-folder
+        with:
+          name: "${{ env.ARTIFACT_NO_ROOT_NAME }}"
+          sha256: ${{ steps.upload-noroot.outputs.sha256 }}
+
+      - name: Download incorrect hash
+        id: download-incorrect-hash
+        continue-on-error: true
+        uses: ./.github/actions/secure-download-folder
+        with:
+          name: "${{ env.ARTIFACT_NAME }}"
+          path: "${{ env.DOWNLOAD_FOLDER_NAME }}"
+          sha256: 977b0c871b048d6578f5d5b40a5b6030a22fc130831a2d7b45b6868da7b51431
+
+      - name: Download existing file
+        id: download-existing-file
+        continue-on-error: true
+        uses: ./.github/actions/secure-download-folder
+        with:
+          name: "${{ env.ARTIFACT_NAME }}"
+          path: "${{ env.DOWNLOAD_FOLDER_NAME }}"
+          sha256: ${{ steps.upload.outputs.sha256 }}
+
+      - name: Download path traversal
+        id: download-traversal
+        continue-on-error: true
+        uses: ./.github/actions/secure-download-folder
+        with:
+          name: "${{ env.ARTIFACT_NAME }}"
+          path: ".."
+          sha256: ${{ steps.upload.outputs.sha256 }}
+
+      - name: Download outside workspace
+        id: download-outside
+        continue-on-error: true
+        uses: ./.github/actions/secure-download-folder
+        with:
+          name: "${{ env.ARTIFACT_NAME }}"
+          path: "/tmp"
+          sha256: ${{ steps.upload.outputs.sha256 }}
+
+      - name: Upload path traversal
+        id: upload-traversal
+        continue-on-error: true
+        uses: ./.github/actions/secure-upload-folder
+        with:
+          name: "${{ env.ARTIFACT_NAME }}"
+          path: "../"
+
+      - name: Upload outside workspace
+        id: upload-outside
+        continue-on-error: true
+        uses: ./.github/actions/secure-upload-folder
+        with:
+          name: "${{ env.ARTIFACT_NAME }}"
+          path: "/tmp/"
+
+      - name: fail check
+        env:
+          SUCCESS: ${{ steps.download-incorrect-hash.outcome == 'failure' && steps.download-existing-file.outcome == 'failure' && steps.download-traversal.outcome == 'failure' && steps.upload-traversal.outcome == 'failure' && steps.upload-outside.outcome == 'failure' && steps.download-outside.outcome == 'failure' }}
+        run: |
+          set -euo pipefail
+          [ "$SUCCESS" == "true" ]
           
           
