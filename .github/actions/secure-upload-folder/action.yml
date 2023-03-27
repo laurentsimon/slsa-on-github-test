@@ -39,7 +39,10 @@ runs:
 
         tempdir=$(mktemp -d)
         tarball_path="${tempdir}/folder.tgz"
-        tar -czvf "${tarball_path}" "${UNTRUSTED_PATH}"
+        # NOTE: we change directory here so that the tarball *only*
+        # the target folder, not its entire path.
+        cd "${UNTRUSTED_PATH}"
+        tar -czvf "${tarball_path}" .
         echo "tarball-path=${tarball_path}" >> "$GITHUB_OUTPUT"
 
     - name: Upload the artifact
