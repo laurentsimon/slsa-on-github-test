@@ -70,7 +70,7 @@ jobs:
         run: |
           set -euo pipefail
           # TODO: replace with script dld, upld
-
+          o="$PWD"
           tree "${DOWNLOAD_FOLDER_NAME}"
 
           cd "${UPLOAD_FOLDER_NAME}"
@@ -85,7 +85,8 @@ jobs:
             echo "Download tree: ${download_tree}"
             exit 1
           fi
-
+          
+          cd "${o}"
           tree "${DOWNLOAD_FOLDER_NO_ROOT_NAME}"
 
           cd "${UPLOAD_FOLDER_NO_ROOT_NAME}"
