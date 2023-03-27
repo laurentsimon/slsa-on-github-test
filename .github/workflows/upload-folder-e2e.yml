@@ -12,18 +12,22 @@ env:
   ARTIFACT_NAME: "my-artifact"
   UPLOAD_FOLDER_NAME: "upload-folder"
   DOWNLOAD_FOLDER_NAME: "download-folder"
+  UPLOAD_FOLDER_NO_ROOT_NAME: "the/root/upload-folder-noroot"
+  DOWNLOAD_FOLDER_NO_ROOT_NAME: "the/root/download-folder-noroot"
 
 jobs:
   secure-upload-folder:
     runs-on: ubuntu-latest
     outputs:
       sha256: ${{ steps.upload.outputs.sha256 }}
+      sha256-noroot: ${{ steps.upload-noroot.outputs.sha256 }}
     steps:
       - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f # v3.4.0
       - name: Create folder
         run: |
           set -euo pipefail
           
+          # Folder in the root of GITHUB_WORKSPACE
           mkdir -p "${UPLOAD_FOLDER_NAME}/inside"
           mkdir -p "${UPLOAD_FOLDER_NAME}/empty"
 
@@ -31,8 +35,14 @@ jobs:
           echo file2 > "${UPLOAD_FOLDER_NAME}/file2"
           echo file3 > "${UPLOAD_FOLDER_NAME}/inside/file3"
           echo file4 > "${UPLOAD_FOLDER_NAME}/inside/file4"
-
+          
           tree "${UPLOAD_FOLDER_NAME}"
+
+          # Folder not in the root of GITHUB_WORKSPACE
+          mkdir -p "${UPLOAD_FOLDER_NO_ROOT_NAME}"
+
+          cp -R "${UPLOAD_FOLDER_NAME}"/* "${UPLOAD_FOLDER_NO_ROOT_NAME}"/
+          tree "${UPLOAD_FOLDER_NO_ROOT_NAME}"
 
       - name: Upload
         id: upload
@@ -40,6 +50,13 @@ jobs:
         with:
           name: "${{ env.ARTIFACT_NAME }}"
           path: "${{ env.UPLOAD_FOLDER_NAME }}"
+          
+      - name: Upload
+        id: upload-noroot
+        uses: ./.github/actions/secure-upload-folder
+        with:
+          name: "${{ env.ARTIFACT_NAME }}-noroot"
+          path: "${UPLOAD_FOLDER_NO_ROOT_NAME}"
 
       - name: Upload
         id: upload-traversal
@@ -81,7 +98,20 @@ jobs:
         with:
           name: "${{ env.ARTIFACT_NAME }}"
           sha256: ${{ needs.secure-upload-folder.outputs.sha256 }}
+      
+      - name: Download in new folder noroot
+        uses: ./.github/actions/secure-download-folder
+        with:
+          name: "${{ env.ARTIFACT_NAME }}-noroot"
+          path: "${{ env.DOWNLOAD_FOLDER_NO_ROOT_NAME }}"
+          sha256: ${{ needs.secure-upload-folder.outputs.sha256-noroot }}
 
+      - name: Download locally noroot
+        uses: ./.github/actions/secure-download-folder
+        with:
+          name: "${{ env.ARTIFACT_NAME }}-noroot"
+          sha256: ${{ needs.secure-upload-folder.outputs.sha256-noroot }}
+          
       - name: debug
         run: |
           tree .
