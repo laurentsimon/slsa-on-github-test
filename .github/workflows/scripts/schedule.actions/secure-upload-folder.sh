@@ -15,24 +15,36 @@ compare_trees() {
 
 original_wd="$PWD"
 
-# Folder at the root of GITHUB_WORKSPACE.
-tree "${DOWNLOAD_FOLDER_NAME}"
-cd "${UPLOAD_FOLDER_NAME}"
+download_folder="$1"
+upload_folder="$2"
+
+tree "${download_folder}"
+cd "${upload_folder}"
 upload_tree=$(tree .)
 cd "${original_wd}"
-cd "${DOWNLOAD_FOLDER_NAME}/${UPLOAD_FOLDER_NAME}"
+cd "${download_folder}/${upload_folder}"
 download_tree=$(tree .)
 
 compare_trees "${upload_tree}" "${download_tree}"
 
-# Folder not at the root of GITHUB_WORKSPACE.
-cd "${original_wd}"
-tree
-tree "${DOWNLOAD_FOLDER_NO_ROOT_NAME}"
-cd "${UPLOAD_FOLDER_NO_ROOT_NAME}"
-upload_tree=$(tree .)
-cd "${original_wd}"
-cd "${DOWNLOAD_FOLDER_NO_ROOT_NAME}/${UPLOAD_FOLDER_NO_ROOT_NAME}"
-download_tree=$(tree .)
+# # Folder at the root of GITHUB_WORKSPACE.
+# tree "${DOWNLOAD_FOLDER_NAME}"
+# cd "${UPLOAD_FOLDER_NAME}"
+# upload_tree=$(tree .)
+# cd "${original_wd}"
+# cd "${DOWNLOAD_FOLDER_NAME}/${UPLOAD_FOLDER_NAME}"
+# download_tree=$(tree .)
 
-compare_trees "${upload_tree}" "${download_tree}"
+# compare_trees "${upload_tree}" "${download_tree}"
+
+# # Folder not at the root of GITHUB_WORKSPACE.
+# cd "${original_wd}"
+# tree
+# tree "${DOWNLOAD_FOLDER_NO_ROOT_NAME}"
+# cd "${UPLOAD_FOLDER_NO_ROOT_NAME}"
+# upload_tree=$(tree .)
+# cd "${original_wd}"
+# cd "${DOWNLOAD_FOLDER_NO_ROOT_NAME}/${UPLOAD_FOLDER_NO_ROOT_NAME}"
+# download_tree=$(tree .)
+
+# compare_trees "${upload_tree}" "${download_tree}"
