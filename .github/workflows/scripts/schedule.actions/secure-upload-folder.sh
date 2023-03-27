@@ -19,7 +19,8 @@ original_wd="$PWD"
 tree "${DOWNLOAD_FOLDER_NAME}"
 cd "${UPLOAD_FOLDER_NAME}"
 upload_tree=$(tree .)
-cd "../${DOWNLOAD_FOLDER_NAME}/${UPLOAD_FOLDER_NAME}"
+cd "${original_wd}"
+cd "${DOWNLOAD_FOLDER_NAME}/${UPLOAD_FOLDER_NAME}"
 download_tree=$(tree .)
 
 compare_trees "${upload_tree}" "${download_tree}"
@@ -30,7 +31,8 @@ tree
 tree "${DOWNLOAD_FOLDER_NO_ROOT_NAME}"
 cd "${UPLOAD_FOLDER_NO_ROOT_NAME}"
 upload_tree=$(tree .)
-cd "../../${DOWNLOAD_FOLDER_NO_ROOT_NAME}/${UPLOAD_FOLDER_NO_ROOT_NAME}"
+cd "${original_wd}"
+cd "${DOWNLOAD_FOLDER_NO_ROOT_NAME}/${UPLOAD_FOLDER_NO_ROOT_NAME}"
 download_tree=$(tree .)
 
 compare_trees "${upload_tree}" "${download_tree}"
