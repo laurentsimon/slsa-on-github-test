@@ -75,7 +75,6 @@ jobs:
 
           cd "${UPLOAD_FOLDER_NAME}"
           upload_tree=$(tree .)
-
           cd "../${DOWNLOAD_FOLDER_NAME}/${UPLOAD_FOLDER_NAME}"
           download_tree=$(tree .)
 
@@ -92,7 +91,7 @@ jobs:
           cd "${UPLOAD_FOLDER_NO_ROOT_NAME}"
           upload_tree=$(tree .)
 
-          cd "../${DOWNLOAD_FOLDER_NO_ROOT_NAME}/${UPLOAD_FOLDER_NO_ROOT_NAME}"
+          cd "../../${DOWNLOAD_FOLDER_NO_ROOT_NAME}/${UPLOAD_FOLDER_NO_ROOT_NAME}"
           download_tree=$(tree .)
 
           if [[ "${upload_tree}" != "${download_tree}" ]]; then
