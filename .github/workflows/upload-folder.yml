@@ -103,7 +103,8 @@ jobs:
 
       - name: Cleanup workspace
         run: |
-          rm -rf .
+          rm -rf "${UPLOAD_FOLDER_NAME}" "${DOWNLOAD_FOLDER_NAME}"
+          rm -rf $(dirname "${UPLOAD_FOLDER_NO_ROOT_NAME}") $(dirname "${DOWNLOAD_FOLDER_NO_ROOT_NAME}")
 
       - name: Download locally
         uses: ./.github/actions/secure-download-folder
