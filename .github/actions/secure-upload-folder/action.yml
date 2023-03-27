@@ -41,7 +41,8 @@ runs:
         tarball_path="${tempdir}/folder.tgz"
         # NOTE: we change directory here so that the tarball *only*
         # contains the target folder, not its entire path.
-        cd "${UNTRUSTED_PATH}"
+        dir=$(dirname "${UNTRUSTED_PATH}")
+        cd "${dir}"
         tar -czvf "${tarball_path}" .
         echo "tarball-path=${tarball_path}" >> "$GITHUB_OUTPUT"
 
