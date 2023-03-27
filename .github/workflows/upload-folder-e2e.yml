@@ -12,6 +12,7 @@ env:
   ARTIFACT_NAME: "my-artifact"
   UPLOAD_FOLDER_NAME: "upload-folder"
   DOWNLOAD_FOLDER_NAME: "download-folder"
+  ARTIFACT_NO_ROOT_NAME: "my-artifact-noroot"
   UPLOAD_FOLDER_NO_ROOT_NAME: "the/root/upload-folder-noroot"
   DOWNLOAD_FOLDER_NO_ROOT_NAME: "the/root/download-folder-noroot"
 
@@ -55,7 +56,7 @@ jobs:
         id: upload-noroot
         uses: ./.github/actions/secure-upload-folder
         with:
-          name: "${{ env.ARTIFACT_NAME }}-noroot"
+          name: "${{ env.ARTIFACT_NO_ROOT_NAME }}"
           path: "${{ env.UPLOAD_FOLDER_NO_ROOT_NAME }}"
 
       - name: Upload
@@ -102,14 +103,14 @@ jobs:
       - name: Download in new folder noroot
         uses: ./.github/actions/secure-download-folder
         with:
-          name: "${{ env.ARTIFACT_NAME }}-noroot"
+          name: "${{ env.ARTIFACT_NO_ROOT_NAME }}"
           path: "${{ env.DOWNLOAD_FOLDER_NO_ROOT_NAME }}"
           sha256: ${{ needs.secure-upload-folder.outputs.sha256-noroot }}
 
       - name: Download locally noroot
         uses: ./.github/actions/secure-download-folder
         with:
-          name: "${{ env.ARTIFACT_NAME }}-noroot"
+          name: "${{ env.ARTIFACT_NO_ROOT_NAME }}"
           sha256: ${{ needs.secure-upload-folder.outputs.sha256-noroot }}
           
       - name: debug
