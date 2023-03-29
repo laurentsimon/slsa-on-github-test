@@ -10,4 +10,9 @@ jobs:
     name: test self
     runs-on: ubuntu-latest
     steps:
-      - uses: laurentsimon/hello-github-actions/action-a@v1.0.0
+      #- uses: laurentsimon/hello-github-actions/action-a@v1.0.0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: |
+          npm version
