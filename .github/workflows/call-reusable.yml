@@ -29,3 +29,26 @@ jobs:
           echo name is ${{ needs.build.outputs.go-binary-name }}
           chmod a+x ./${{ needs.build.outputs.go-binary-name }}
           ./${{ needs.build.outputs.go-binary-name }}
+
+  slsa-run:
+    permissions:
+      id-token: write # For signing.
+      contents: write # For asset uploads. 
+      packages: write
+    #uses: slsa-framework/slsa-github-generator/.github/workflows/delegator_generic_slsa3.yml@main
+    uses: laurentsimon/slsa-github-generator/.github/workflows/delegator_generic_slsa3.yml@feat/more-secrets
+    #uses: slsa-framework/slsa-github-generator/.github/workflows/delegator_generic_slsa3.yml@v1.5.0
+    with:
+      slsa-token: random-string
+    secrets:
+      secret1: oineowqcjmcoqicnmocnjf
+      secret2: d0j982fn9n2fnqonnjrpivmekv
+      secret3: d0j982fn9n2fnqonnjrpivmekv
+      secret4: d0j982fn9n2fnqonnjrpivmekv
+      secret5: d0j982fn9n2fnqonnjrpivmekv
+      secret6: d0j982fn9n2fnqonnjrpivmekv
+      secret7: d0j982fn9n2fnqonnjrpivmekv
+      secret8: d0j982fn9n2fnqonnjrpivmekv
+
+
+        
