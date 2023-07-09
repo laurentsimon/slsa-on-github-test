@@ -62,6 +62,8 @@ jobs:
       - name: Share the file
         id: subjectfile
         uses: laurentsimon/slsa-github-generator/actions/generator/generic/create-base64-subjects-from-file@feat/large-subjects
+        with:
+          path: subjects_file.sha256.b64
         #uses: slsa-framework/slsa-github-generator/.github/actions/secure-upload-artifact@main
           
   provenance:
