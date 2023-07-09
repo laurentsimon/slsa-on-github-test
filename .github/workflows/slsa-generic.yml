@@ -27,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       digests: ${{ steps.hash.outputs.digests }}
+      subject-file-sha256: ${{ steps.subjectfile.outputs.sha256 }}
 
     steps:
       # ========================================================
@@ -52,6 +53,16 @@ jobs:
         run: |
           set -euo pipefail
           echo "::set-output name=digests::$(sha256sum artifact1 artifact2 | base64 -w0)"
+          
+      - name: Generate file subject
+        run: |
+          set -euo pipefail
+          sha256sum artifact1 artifact2 | base64 -w0 > subjects_file.sha256.b64
+          
+      - name: Share the file
+        id: subjectfile
+        uses: slsa-framework/slsa-github-generator/.github/actions/secure-upload-artifact@main
+          
   provenance:
     needs: [build]
     permissions:
@@ -60,8 +71,11 @@ jobs:
       contents: write # To add assets to a release.
     #uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.2.2
     # This corresponds to laurentsimon/slsa-github-generator@test/imposter
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@32d3df3ab84439a53d5d3e42275aae349fddcd44
+    #uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@32d3df3ab84439a53d5d3e42275aae349fddcd44
+    uses: laurentsimon/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@feat/large-subjects
     with:
       base64-subjects: "${{ needs.build.outputs.digests }}"
+      base64-subject-name: "subjectfile-rand"
+      base64-subject-name-sha256: "${{ needs.build.outputs.subject-file-sha256 }}"
       upload-assets: true # Optional: Upload to a new release
       #compile-generator: true
