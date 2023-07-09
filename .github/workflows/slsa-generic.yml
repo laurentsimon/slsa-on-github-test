@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       digests: ${{ steps.hash.outputs.digests }}
-      subjects-as-file: ${{ steps.subjectfile.outputs.as-file }}
+      digests-as-file: ${{ steps.subjectfile.outputs.handle }}
       
     steps:
       # ========================================================
@@ -61,12 +61,7 @@ jobs:
           
       - name: Share the file
         id: subjectfile
-        run: |
-          set -euo pipefail
-          obj='{"name:":"filename-rand", "sha256": "abcdef"}'
-          echo "${obj}" | jq
-          b64_obj=$(echo "${obj}" | base64 -w0)
-          echo "::set-output name=as-file::${b64_obj}"
+        uses: laurentsimon/slsa-github-generator/actions/generator/generic/create-base64-subjects-from-file@feat/large-subjects
         #uses: slsa-framework/slsa-github-generator/.github/actions/secure-upload-artifact@main
           
   provenance:
@@ -81,6 +76,6 @@ jobs:
     uses: laurentsimon/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@feat/large-subjects
     with:
       #base64-subjects: "${{ needs.build.outputs.digests }}"
-      base64-subjects-as-file: "${{ needs.build.outputs.subjects-as-file }}"
+      base64-subjects-as-file: "${{ needs.build.outputs.digests-as-file }}"
       upload-assets: true # Optional: Upload to a new release
       #compile-generator: true
