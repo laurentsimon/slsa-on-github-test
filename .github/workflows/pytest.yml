@@ -22,6 +22,7 @@ jobs:
         set -euo pipefail
         python -m venv venv
         source venv/bin/activate
+        echo "$PATH"
         python -m pip install --require-hashes -r .github/workflows/scripts/requirements.txt
         tree venv/
         echo "$PATH"
