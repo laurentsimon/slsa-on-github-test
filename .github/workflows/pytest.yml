@@ -22,10 +22,12 @@ jobs:
         set -euo pipefail
         python -m venv venv
         source venv/bin/activate
+        pwd
         echo "$PATH"
         python -m pip install --require-hashes -r .github/workflows/scripts/requirements.txt
-        tree venv/
+        #tree venv/
         echo "$PATH"
+        ls -l venv/bin/pytest
     - name: Run unit tests
       run: |
         set -euo pipefail
